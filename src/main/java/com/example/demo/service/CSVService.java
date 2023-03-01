@@ -67,20 +67,4 @@ public class CSVService {
       throw new RuntimeException("failed to save csv data: " + e.getMessage());
     }
   }
-
-  public List<Thing> getAllThings() {
-    return thingRepository.findAll();
-  }
-
-  public List<Bug> getAllBugs() { return bugRepository.findAll();
-  }
-
-  public List<Device> getAllDevices() { return deviceRepository.findAll();
-  }
-
-  public List<Tester> getAllTesters() { return testerRepository.findAll();
-  }
-
-  public List<TesterDevice> getAllTesterDevices() { return testerDeviceRepository.findAll();
-  }
 }
