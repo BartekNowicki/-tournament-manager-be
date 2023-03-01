@@ -6,8 +6,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "things")
 public class Thing {
 
@@ -25,45 +31,11 @@ public class Thing {
     @Column(name = "good")
     private boolean good;
 
-    public Thing() {}
-
     public Thing(long id, String title, String description, boolean good) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.good = good;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isGood() {
-        return good;
-    }
-
-    public void setGood(boolean isPublished) {
-        this.good = isPublished;
     }
 
     @Override
