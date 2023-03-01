@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
-import com.example.demo.dataModel.Thing;
+import com.example.demo.dataModel.*;
 import com.example.demo.message.ResponseMessage;
 import com.example.demo.service.CSVService;
 import com.example.demo.utils.CSVHelper;
@@ -31,8 +31,31 @@ public class CSVController {
         String message = "";
 
         if (CSVHelper.hasCSVFormat(file)) {
+
+      System.out.println("_____________________________________________________________");
+      System.out.println(file.getOriginalFilename());
+      System.out.println("_____________________________________________________________");
+
             try {
-                fileService.save(file);
+
+                switch(file.getOriginalFilename()) {
+                    case "bugs.csv":
+                        fileService.saveBugs(file);
+                        break;
+                    case "devices.csv":
+                        fileService.saveDevices(file);
+                        break;
+                    case "tester_device.csv":
+                        fileService.saveTesterDevices(file);
+                        break;
+                    case "testers.csv":
+                        fileService.saveTesters(file);
+                        break;
+                    case "things.csv":
+                        fileService.saveThings(file);
+                        break;
+                    default: {}
+                }
 
                 message = "Uploaded the file successfully: " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
@@ -46,19 +69,63 @@ public class CSVController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
-    @GetMapping("/things")
-    public ResponseEntity<List<Thing>> getAllThings() {
+    @GetMapping("/bugs")
+    public ResponseEntity<List<Bug>> getAllBugs() {
         try {
-            List<Thing> things = fileService.getAllThings();
+            List<Bug> bugs = fileService.getAllBugs();
 
-            if (things.isEmpty()) {
+            if (bugs.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            return new ResponseEntity<>(things, HttpStatus.OK);
+            return new ResponseEntity<>(bugs, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @GetMapping("/devices")
+    public ResponseEntity<List<Device>> getAllDevices() {
+        try {
+            List<Device> devices = fileService.getAllDevices();
+
+            if (devices.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(devices, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/testers")
+    public ResponseEntity<List<Tester>> getAllTesters() {
+        try {
+            List<Tester> testers = fileService.getAllTesters();
+
+            if (testers.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(testers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/tester_devices")
+    public ResponseEntity<List<TesterDevice>> getAllTesterDevices() {
+        try {
+            List<TesterDevice> testerDevices = fileService.getAllTesterDevices();
+
+            if (testerDevices.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(testerDevices, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
