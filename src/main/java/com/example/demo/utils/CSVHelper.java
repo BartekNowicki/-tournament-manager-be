@@ -15,11 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class CSVHelper {
     public static String TYPE = "text/csv";
-    static String[] THING_HEADERs = { "Id", "Title", "Description", "Good" };
-    static String[] BUG_HEADERs = { "bugId","deviceId","testerId" };
-    static String[] DEVICE_HEADERs = { "deviceId","description" };
-    static String[] TESTER_HEADERs = { "testerId","firstName","lastName","country","lastLogin" };
-    static String[] TESTERDEVICE_HEADERs = { "id", "testerId","deviceId" };
 
     public static boolean hasCSVFormat(MultipartFile file) {
 
@@ -28,32 +23,6 @@ public class CSVHelper {
         }
 
         return true;
-    }
-
-    public static List<Thing> csvToThings(InputStream is) {
-        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-             CSVParser csvParser = new CSVParser(fileReader,
-                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
-
-            List<Thing> things = new ArrayList<>();
-
-            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
-
-            for (CSVRecord csvRecord : csvRecords) {
-                Thing thing = new Thing(
-                        Long.parseLong(csvRecord.get("Id")),
-                        csvRecord.get("Title"),
-                        csvRecord.get("Description"),
-                        Boolean.parseBoolean(csvRecord.get("Good"))
-                );
-
-                things.add(thing);
-            }
-
-            return things;
-        } catch (IOException e) {
-            throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
-        }
     }
 
     public static List<Bug> csvToBugs(InputStream is) {

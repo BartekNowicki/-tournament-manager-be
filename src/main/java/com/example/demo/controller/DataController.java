@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.*;
+import com.example.demo.repository.TesterRepository;
 import com.example.demo.service.DataService;
 import com.example.demo.utils.BugDTOMapper;
 import com.example.demo.utils.DeviceDTOMapper;
@@ -13,10 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
-@CrossOrigin("http://localhost:8081")
 @Controller
 @RequestMapping("/api/data")
 public class DataController {
@@ -27,10 +29,12 @@ public class DataController {
   @Autowired private TesterDTOMapper testerDTOmapper;
   @Autowired private TesterDeviceDTOMapper testerDeviceDTOmapper;
 
+  @Autowired TesterRepository repoRemove;
+
   @GetMapping("/countries")
-  public ResponseEntity<List<String>> getAllCountries() {
+  public ResponseEntity<Set<String>> getAllCountries() {
     try {
-      List<String> countries = dataService.getAllCountries();
+      Set<String> countries = dataService.getAllCountries();
 
       if (countries.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,7 +51,6 @@ public class DataController {
     try {
       List<BugDTO> bugs =
           dataService.getAllBugs().stream().map(bugDTOmapper::toBugDTO).collect(toList());
-      ;
 
       if (bugs.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -76,10 +79,12 @@ public class DataController {
 
   @GetMapping("/testers")
   public ResponseEntity<List<TesterDTOwithDeviceNamesOnly>> getAllTesters() {
+
     try {
       List<TesterDTOwithDeviceNamesOnly> testers =
-          dataService.getAllTesters().stream().map(testerDTOmapper::toTesterDTO).collect(toList());
-      ;
+          dataService.getAllTesters().stream()
+              .map(testerDTOmapper::toTesterDTOwithDeviceNamesOnly)
+              .collect(toList());
 
       if (testers.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -105,6 +110,29 @@ public class DataController {
       }
 
       return new ResponseEntity<>(testerDevices, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  // ranked in order of tester Experience per device!!! measured by the number of Bug(s) a Tester
+  // filed for the given Device(s).
+  @GetMapping("/match")
+  // Country and Device, possible ALL, multiple selections treated as OR
+  public ResponseEntity<Map<String, List>> getAllMatchingTestersRankedByExperience(
+      @RequestParam Map<String, List> criteria) {
+
+    if (criteria.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    try {
+      List<TesterDTOwithDeviceNamesOnly> testers = dataService.findTestersByCountry("US");
+      List<TesterDTOwithDeviceNamesOnly> matchingTesters =
+          testers.stream()
+              .filter(t -> t.getOwnedDeviceNames().contains("iPhone 5"))
+              .collect(toList());
+
+      return new ResponseEntity(matchingTesters, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -12,8 +12,7 @@ import com.example.demo.utils.CSVHelper;
 
 @Service
 public class CSVService {
-  @Autowired
-  ThingRepository thingRepository;
+
   @Autowired
   BugRepository bugRepository;
   @Autowired
@@ -22,15 +21,6 @@ public class CSVService {
   TesterRepository testerRepository;
   @Autowired
   TesterDeviceRepository testerDeviceRepository;
-
-  public void saveThings(MultipartFile file) {
-    try {
-      List<Thing> things = CSVHelper.csvToThings(file.getInputStream());
-      thingRepository.saveAll(things);
-    } catch (IOException e) {
-      throw new RuntimeException("failed to save csv data: " + e.getMessage());
-    }
-  }
 
   public void saveBugs(MultipartFile file) {
     try {

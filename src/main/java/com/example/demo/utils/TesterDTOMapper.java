@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class TesterDTOMapper {
-  public TesterDTOwithDeviceNamesOnly toTesterDTO(Tester tester) {
+  public TesterDTOwithDeviceNamesOnly toTesterDTOwithDeviceNamesOnly(Tester tester) {
     return new TesterDTOwithDeviceNamesOnly(
         tester.getTesterId(),
         tester.getFirstName(),
