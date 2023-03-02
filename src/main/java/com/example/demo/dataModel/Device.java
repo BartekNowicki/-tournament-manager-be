@@ -6,7 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,6 +26,16 @@ public class Device {
 
     @Column(name = "description")
     private String description;
+
+    @ManyToMany(mappedBy = "ownedDevices")
+    Set<Tester> owners;
+
+
+    //constructor needed by the CSVHelper
+    public Device(long deviceId, String description) {
+        this.deviceId = deviceId;
+        this.description = description;
+    }
 
     @Override
     public String toString() {

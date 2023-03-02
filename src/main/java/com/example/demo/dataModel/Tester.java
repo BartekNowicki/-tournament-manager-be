@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -34,6 +35,22 @@ public class Tester {
     @Column(name = "lastLogin")
     //private LocalDateTime lastLogin;
     private String lastLogin;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tester_device",
+            joinColumns = @JoinColumn(name = "testerId"),
+            inverseJoinColumns = @JoinColumn(name = "deviceId"))
+    Set<Device> ownedDevices;
+
+    //constructor needed by the CSVHelper
+    public Tester(long testerId, String firstName, String lastName, String country, String lastLogin) {
+        this.testerId = testerId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.country = country;
+        this.lastLogin = lastLogin;
+    }
 
     @Override
     public String toString() {

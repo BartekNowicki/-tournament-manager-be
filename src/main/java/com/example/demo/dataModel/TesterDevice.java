@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Entity
 @Getter
 @Setter
@@ -18,15 +16,18 @@ public class TesterDevice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "testerId")
+    @Column(name = "id")
     private long id;
+
+    @Column(name = "testerId")
+    private long testerId;
 
     @Column(name = "deviceId")
     private long deviceId;
 
     @Override
     public String toString() {
-        return "TesterDevice [testerId=" + id + ", deviceId=" + deviceId + "]";
+        return "TesterDevice [testerId=" + testerId + ", deviceId=" + deviceId + "]";
     }
 }
 

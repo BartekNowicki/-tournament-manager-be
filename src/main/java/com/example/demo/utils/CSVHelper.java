@@ -142,8 +142,11 @@ public class CSVHelper {
 
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
+            int id = 0;
+
             for (CSVRecord csvRecord : csvRecords) {
                 TesterDevice testerDevice = new TesterDevice(
+                        id++,
                         Long.parseLong(csvRecord.get("testerId")),
                         Long.parseLong(csvRecord.get("deviceId"))
                 );
