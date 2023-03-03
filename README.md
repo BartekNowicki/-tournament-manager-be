@@ -10,6 +10,8 @@ Instructions
 
 ![upload](https://user-images.githubusercontent.com/65188628/222798882-680f29ab-7a6c-46e6-819a-14e241d50785.png)
 
+file location: src/main/java/com/example/demo/csvFilesForInitialUpload
+
 endpoint: http://localhost:8080/api/csv/upload
 
 Use the following order:
