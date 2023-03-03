@@ -13,10 +13,15 @@ Instructions
 endpoint: http://localhost:8080/api/csv/upload
 
 Use the following order:
+
 testers.scv
+
 devices.csv
+
 tester_device.csv
+
 bugs.csv
+
 
 Run a test e.g. by sending the following search criteria through a GET request to http://localhost:8080/api/data/match like so:
 
