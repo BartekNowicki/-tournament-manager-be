@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 @Component
 public class DeviceDTOMapper {
   public DeviceDTOwithTesterIDonly toDeviceDTO(Device device) {
-    return new DeviceDTOwithTesterIDonly(device.getDeviceId(), device.getDescription(), device.getOwners().stream().map(owner -> owner.getTesterId()).collect(Collectors.toSet()));
+    return new DeviceDTOwithTesterIDonly(
+        device.getDeviceId(),
+        device.getDescription(),
+        device.getOwners().stream().map(owner -> owner.getTesterId()).collect(Collectors.toSet()));
   }
 }

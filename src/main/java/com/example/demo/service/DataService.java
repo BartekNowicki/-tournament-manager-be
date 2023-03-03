@@ -20,9 +20,22 @@ public class DataService {
   @Autowired TesterDeviceRepository testerDeviceRepository;
   @Autowired TesterDTOMapper testerDTOMapper;
 
-
   public List<Bug> getAllBugs() {
     return bugRepository.findAll();
+  }
+
+  public List<Bug> getAllBugsByTesterId(Long testerId, Long deviceId) {
+    return bugRepository.findAllByTesterIdAndDeviceId(testerId, deviceId);
+  }
+
+  public int totalBugsFiled(Long testerId, List<String> deviceNames) {
+    return deviceNames.stream()
+        .map(deviceName -> getAllBugsByTesterId(testerId, getDeviceIdFrom(deviceName)).size())
+        .reduce(0, (subtotal, n) -> subtotal + n);
+  }
+
+  private Long getDeviceIdFrom(String deviceName) {
+    return deviceRepository.findByDescription(deviceName).getDeviceId();
   }
 
   public List<Device> getAllDevices() {
@@ -38,11 +51,12 @@ public class DataService {
   }
 
   public Set<String> getAllCountries() {
-    //return List.of("US", "PL", "DE");
     return getAllTesters().stream().map(Tester::getCountry).collect(Collectors.toSet());
   }
 
   public List<TesterDTOwithDeviceNamesOnly> findTestersByCountry(String country) {
-    return testerRepository.findTestersByCountry(country).stream().map(t -> testerDTOMapper.toTesterDTOwithDeviceNamesOnly(t)).collect(Collectors.toList());
+    return testerRepository.findTestersByCountry(country).stream()
+        .map(t -> testerDTOMapper.toTesterDTOwithDeviceNamesOnly(t))
+        .collect(Collectors.toList());
   }
 }

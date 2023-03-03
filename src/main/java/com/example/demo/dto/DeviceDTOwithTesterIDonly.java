@@ -8,7 +8,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 public class DeviceDTOwithTesterIDonly {
-    private long deviceId;
-    private String description;
-    private Set<Long> owners;
+  private long deviceId;
+  private String description;
+  private Set<Long> owners;
 }

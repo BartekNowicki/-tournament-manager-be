@@ -12,46 +12,47 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-
 @Controller
 @RequestMapping("/api/csv")
 public class CSVController {
 
-    @Autowired
-    CSVService csvFileService;
+  @Autowired CSVService csvFileService;
 
-    @PostMapping("/upload")
-    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
-        String message = "";
+  @PostMapping("/upload")
+  public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+    String message = "";
 
-        if (CSVHelper.hasCSVFormat(file)) {
+    if (CSVHelper.hasCSVFormat(file)) {
 
-            try {
-                switch(file.getOriginalFilename()) {
-                    case "bugs.csv":
-                        csvFileService.saveBugs(file);
-                        break;
-                    case "devices.csv":
-                        csvFileService.saveDevices(file);
-                        break;
-                    case "tester_device.csv":
-                        csvFileService.saveTesterDevices(file);
-                        break;
-                    case "testers.csv":
-                        csvFileService.saveTesters(file);
-                        break;
-                    default: {}
-                }
-
-                message = "Uploaded the file successfully: " + file.getOriginalFilename();
-                return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-            } catch (Exception e) {
-                message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+      try {
+        switch (file.getOriginalFilename()) {
+          case "bugs.csv":
+            csvFileService.saveBugs(file);
+            break;
+          case "devices.csv":
+            csvFileService.saveDevices(file);
+            break;
+          case "tester_device.csv":
+            csvFileService.saveTesterDevices(file);
+            break;
+          case "testers.csv":
+            csvFileService.saveTesters(file);
+            break;
+          default:
+            {
             }
         }
 
-        message = "Please upload a csv file!";
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
+        message = "Uploaded the file successfully: " + file.getOriginalFilename();
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+      } catch (Exception e) {
+        message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+            .body(new ResponseMessage(message));
+      }
     }
+
+    message = "Please upload a csv file!";
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
+  }
 }

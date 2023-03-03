@@ -15,7 +15,8 @@ public class TesterDTOMapper {
         tester.getLastName(),
         tester.getCountry(),
         tester.getLastLogin(),
-        tester.getOwnedDevices().stream().map(device -> device.getDescription()).collect(Collectors.toSet())
-);
+        tester.getOwnedDevices().stream()
+            .map(device -> device.getDescription())
+            .collect(Collectors.toSet()));
   }
 }

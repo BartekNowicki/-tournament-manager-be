@@ -13,14 +13,10 @@ import com.example.demo.utils.CSVHelper;
 @Service
 public class CSVService {
 
-  @Autowired
-  BugRepository bugRepository;
-  @Autowired
-  DeviceRepository deviceRepository;
-  @Autowired
-  TesterRepository testerRepository;
-  @Autowired
-  TesterDeviceRepository testerDeviceRepository;
+  @Autowired BugRepository bugRepository;
+  @Autowired DeviceRepository deviceRepository;
+  @Autowired TesterRepository testerRepository;
+  @Autowired TesterDeviceRepository testerDeviceRepository;
 
   public void saveBugs(MultipartFile file) {
     try {

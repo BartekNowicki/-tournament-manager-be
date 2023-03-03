@@ -6,7 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class TesterDeviceDTO {
-   private long testerId;
-   private long deviceId;
-
+  private long testerId;
+  private long deviceId;
 }

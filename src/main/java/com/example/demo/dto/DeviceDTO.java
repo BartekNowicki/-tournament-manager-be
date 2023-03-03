@@ -9,7 +9,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 public class DeviceDTO {
-    private long deviceId;
-    private String description;
-    private Set<Tester> owners;
+  private long deviceId;
+  private String description;
+  private Set<Tester> owners;
 }

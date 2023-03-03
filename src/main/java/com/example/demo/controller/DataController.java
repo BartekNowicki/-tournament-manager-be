@@ -13,9 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -114,25 +113,59 @@ public class DataController {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  // ranked in order of tester Experience per device!!! measured by the number of Bug(s) a Tester
-  // filed for the given Device(s).
+
   @GetMapping("/match")
-  // Country and Device, possible ALL, multiple selections treated as OR
-  public ResponseEntity<Map<String, List>> getAllMatchingTestersRankedByExperience(
-      @RequestParam Map<String, List> criteria) {
+  public ResponseEntity<Map<Long, Integer>> getAllMatchingTestersRankedByExperience(
+      @RequestBody Map<String, Set> criteria) {
 
     if (criteria.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    List<String> countries = criteria.get("countries").stream().toList();
+    List<String> devices = criteria.get("devices").stream().toList();
+
+    if (countries == null || countries.isEmpty() || devices == null || devices.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    List<TesterDTOwithDeviceNamesOnly> testers = new ArrayList<>();
+
     try {
-      List<TesterDTOwithDeviceNamesOnly> testers = dataService.findTestersByCountry("US");
+
+      for (String country : countries) {
+
+        if (country == null || country == "") {
+          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        testers.addAll(dataService.findTestersByCountry(country));
+      }
+
       List<TesterDTOwithDeviceNamesOnly> matchingTesters =
           testers.stream()
-              .filter(t -> t.getOwnedDeviceNames().contains("iPhone 5"))
+              .filter(
+                  tester ->
+                      tester.getOwnedDeviceNames().stream()
+                          .anyMatch(name -> (devices.contains(name))))
               .collect(toList());
 
-      return new ResponseEntity(matchingTesters, HttpStatus.OK);
+      Map<Long, Integer> testerExperience = new HashMap<>();
+      matchingTesters.stream()
+          .forEach(
+              tester ->
+                  testerExperience.put(
+                      tester.getTesterId(),
+                      dataService.totalBugsFiled(tester.getTesterId(), devices)));
+
+      Map<Long, Integer> testerExperienceSorted =
+          testerExperience.entrySet().stream()
+              .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+              .collect(
+                  Collectors.toMap(
+                      Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+      return new ResponseEntity(testerExperienceSorted, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
