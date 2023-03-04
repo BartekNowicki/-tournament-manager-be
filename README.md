@@ -4,7 +4,7 @@ Instructions
 
 1. Install and configure your local mysql instance with a demo_db database on it
 2. Clone the repository into your machine
-3. Add your mysql access envvars into your IDE
+3. Add your mysql access envvars into your IDE: MYSQL_USERNAME=<your login>;MYSQL_PASSWORD=<your password>
 4. Launch your mysql server
 5. Use Postman (or a similar tool) to upload the data into your application through a POST request, as separate csv files that will be parsed by the application, like so:
 
