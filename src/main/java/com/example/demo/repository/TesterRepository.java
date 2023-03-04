@@ -10,4 +10,6 @@ public interface TesterRepository extends JpaRepository<Tester, Long> {
 
   @Query(value = "SELECT * FROM demo_db.testers t WHERE country = ?1", nativeQuery = true)
   List<Tester> findTestersByCountry(String country);
+
+  Tester findOneByTesterId(long testerId);
 }
