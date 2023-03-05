@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @Controller
 @RequestMapping("/api/data")
 public class DataController {
@@ -114,7 +115,7 @@ public class DataController {
     }
   }
 
-  @GetMapping("/match")
+  @PostMapping("/match")
   public ResponseEntity<Map<Long, Integer>> getAllMatchingTestersRankedByExperience(
       @RequestBody Map<String, Set> criteria) {
 
