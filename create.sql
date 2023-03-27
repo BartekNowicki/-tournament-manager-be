@@ -1,5 +1,5 @@
 
-    create table bugs (
+    create table players (
        bug_id bigint not null,
         device_id bigint,
         tester_id bigint,
@@ -12,7 +12,7 @@
 
     insert into bugs_seq values ( 1 );
 
-    create table devices (
+    create table tournaments (
        device_id bigint not null,
         description varchar(255),
         primary key (device_id)
@@ -65,7 +65,7 @@
 
     insert into things_seq values ( 1 );
 
-    create table bugs (
+    create table players (
        bug_id bigint not null,
         device_id bigint,
         tester_id bigint,
@@ -78,7 +78,7 @@
 
     insert into bugs_seq values ( 1 );
 
-    create table devices (
+    create table tournaments (
        device_id bigint not null,
         description varchar(255),
         primary key (device_id)
@@ -131,7 +131,7 @@
 
     insert into things_seq values ( 1 );
 
-    create table bugs (
+    create table players (
        bug_id bigint not null,
         device_id bigint,
         tester_id bigint,
@@ -144,7 +144,7 @@
 
     insert into bugs_seq values ( 1 );
 
-    create table devices (
+    create table tournaments (
        device_id bigint not null,
         description varchar(255),
         primary key (device_id)
