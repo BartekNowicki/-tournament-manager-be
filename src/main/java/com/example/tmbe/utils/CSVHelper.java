@@ -8,11 +8,11 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.tmbe.dataModel.*;
-import jakarta.persistence.Column;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -85,12 +85,12 @@ public class CSVHelper {
                 Integer.parseInt(csvRecord.get("groupSize")),
                 csvRecord.get("comment"),
                 null);
-
         tournaments.add(tournament);
       }
 
       return tournaments;
     } catch (IOException | ParseException e) {
+
       throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
     }
   }

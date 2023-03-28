@@ -14,7 +14,6 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -26,10 +25,10 @@ public class Tournament {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "tournamentId")
+  @Column(name = "id")
   private long id;
 
-  @Column(name = "description")
+  @Column(name = "type")
   private String type;
 
   @Column(name = "startDate")
@@ -68,11 +67,4 @@ public class Tournament {
         + participatingPlayers.size()
         + '}';
   }
-
-  // constructor needed by the CSVHelper
-  //  public Tournament(long deviceId, String description) {
-  //    this.deviceId = deviceId;
-  //    this.description = description;
-  //  }
-
 }

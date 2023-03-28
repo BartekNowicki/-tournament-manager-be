@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class PlayerDTO {
-  private long id;
+  private long playerId;
   private boolean isChecked;
   private String firstName;
   private String lastName;
