@@ -2,11 +2,15 @@ package com.example.tmbe.utils;
 
 import com.example.tmbe.dataModel.Player;
 import com.example.tmbe.dataModel.Tournament;
+import com.example.tmbe.enumConverter.TournamentType;
+import com.example.tmbe.enumConverter.TournamentTypeConverter;
+import jakarta.persistence.AttributeConverter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -92,11 +96,14 @@ class CSVHelperTest {
 
     Iterable<CSVRecord> csvRecords = tournamentsCsvParser.getRecords();
 
+    TournamentTypeConverter tournamentTypeConverter = new TournamentTypeConverter();
+
     for (CSVRecord csvRecord : csvRecords) {
+
       Tournament tournament =
           new Tournament(
               Long.parseLong(csvRecord.get("id")),
-              csvRecord.get("type"),
+              tournamentTypeConverter.convertToEntityAttribute(csvRecord.get("type")),
               df.parse(csvRecord.get("startDate")),
               df.parse(csvRecord.get("endDate")),
               Integer.parseInt(csvRecord.get("groupSize")),
@@ -108,6 +115,6 @@ class CSVHelperTest {
     }
     assertEquals(10, tournaments.size());
     assertEquals(0, tournaments.get(1).getGroupSize());
-    assertEquals("singles", tournaments.get(1).getType());
+    assertEquals("singles", tournaments.get(1).getType().getNaming());
   }
 }

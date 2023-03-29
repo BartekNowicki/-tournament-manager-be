@@ -1,6 +1,9 @@
 package com.example.tmbe.dataModel;
 
+import com.example.tmbe.enumConverter.TournamentType;
+import com.example.tmbe.enumConverter.TournamentTypeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +18,7 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity
 @Getter
 @Setter
@@ -28,8 +32,12 @@ public class Tournament {
   @Column(name = "id")
   private long id;
 
+//  @Column(name = "type")
+//  private String type;
+
   @Column(name = "type")
-  private String type;
+  @Convert(converter = TournamentTypeConverter.class)
+  private TournamentType type;
 
   @Column(name = "startDate")
   private Date startDate;

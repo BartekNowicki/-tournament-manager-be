@@ -1,5 +1,6 @@
 package com.example.tmbe.dto;
 
+import com.example.tmbe.enumConverter.TournamentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 @Getter
 public class TournamentDTO {
   private long id;
-  private String type;
+  private TournamentType type;
   private Date startDate;
   private Date endDate;
   private int groupSize;

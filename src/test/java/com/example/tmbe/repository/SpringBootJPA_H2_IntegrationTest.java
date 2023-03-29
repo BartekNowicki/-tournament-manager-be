@@ -3,6 +3,7 @@ package com.example.tmbe.repository;
 import com.example.tmbe.config.AppConfig;
 import com.example.tmbe.dataModel.Player;
 import com.example.tmbe.dataModel.Tournament;
+import com.example.tmbe.enumConverter.TournamentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +33,7 @@ public class SpringBootJPA_H2_IntegrationTest {
   Tournament tournament1 =
       new Tournament(
           1L,
-          "singles",
+          TournamentType.SINGLES,
           new Date(),
           new Date(),
           3,
@@ -40,7 +41,7 @@ public class SpringBootJPA_H2_IntegrationTest {
           List.of(player1, player2));
   Tournament tournament2 =
       new Tournament(
-          2L, "doubles", new Date(), new Date(), 6, "tournament1 was awesome", List.of(player1));
+          2L, TournamentType.DOUBLES, new Date(), new Date(), 6, "tournament1 was awesome", List.of(player1));
 
   @Autowired private PlayerRepository playerRepository;
   @Autowired private TournamentRepository tournamentRepository;

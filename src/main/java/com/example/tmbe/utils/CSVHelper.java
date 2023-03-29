@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.tmbe.dataModel.*;
+import com.example.tmbe.enumConverter.TournamentTypeConverter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.web.multipart.MultipartFile;
 
 public class CSVHelper {
+
   public static String TYPE = "text/csv";
 
   public static boolean hasCSVFormat(MultipartFile file) {
@@ -72,12 +74,14 @@ public class CSVHelper {
 
       // ORIG DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy");
       DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+      TournamentTypeConverter tournamentTypeConverter = new TournamentTypeConverter();
 
       for (CSVRecord csvRecord : csvRecords) {
+
         Tournament tournament =
             new Tournament(
                 Long.parseLong(csvRecord.get("id")),
-                csvRecord.get("type"),
+                tournamentTypeConverter.convertToEntityAttribute(csvRecord.get("type")),
                 df.parse(csvRecord.get("startDate")),
                 df.parse(csvRecord.get("endDate")),
                 Integer.parseInt(csvRecord.get("groupSize")),
