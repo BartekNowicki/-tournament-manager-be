@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.tmbe.dataModel.*;
+import com.example.tmbe.enumConverter.TournamentType;
 import com.example.tmbe.enumConverter.TournamentTypeConverter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
