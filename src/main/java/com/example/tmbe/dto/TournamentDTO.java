@@ -15,4 +15,8 @@ public class TournamentDTO {
   private Date endDate;
   private int groupSize;
   private String comment;
+
+  public static TournamentDTO badTournamentDTO(String message) {
+    return new TournamentDTO(0, null, null, null, 0, message);
+  }
 }

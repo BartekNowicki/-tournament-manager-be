@@ -1,8 +1,6 @@
-package com.example.tmbe.utils;
+package com.example.tmbe.dto;
 
 import com.example.tmbe.dataModel.Tournament;
-import com.example.tmbe.dto.PlayerDTO;
-import com.example.tmbe.dto.TournamentDTO;
 import org.springframework.stereotype.Component;
 
 @Component

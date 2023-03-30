@@ -1,7 +1,6 @@
-package com.example.tmbe.utils;
+package com.example.tmbe.dto;
 
 import com.example.tmbe.dataModel.Player;
-import com.example.tmbe.dto.PlayerDTO;
 import org.springframework.stereotype.Component;
 
 @Component

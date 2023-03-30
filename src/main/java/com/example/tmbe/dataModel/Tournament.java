@@ -32,9 +32,6 @@ public class Tournament {
   @Column(name = "id")
   private long id;
 
-//  @Column(name = "type")
-//  private String type;
-
   @Column(name = "type")
   @Convert(converter = TournamentTypeConverter.class)
   private TournamentType type;
