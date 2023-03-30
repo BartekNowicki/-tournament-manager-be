@@ -5,6 +5,7 @@ import com.example.tmbe.exception.NoEntityFoundCustomException;
 import com.example.tmbe.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.Optional;
 public class PlayerService {
   @Autowired PlayerRepository playerRepository;
 
-  public List<Player> getAllPlayers() {
-    return playerRepository.findAll();
+  public List<Player> getAllPlayersOrderByIdAsc() {
+    return playerRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
   }
 
   public Optional<Player> getPlayerById(long id) {

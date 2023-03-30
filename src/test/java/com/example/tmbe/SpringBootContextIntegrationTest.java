@@ -2,6 +2,7 @@ package com.example.tmbe;
 
 import com.example.tmbe.config.AppConfig;
 
+import com.example.tmbe.controller.DataController;
 import com.example.tmbe.repository.PlayerRepository;
 import com.example.tmbe.repository.TournamentRepository;
 import com.example.tmbe.service.PlayerService;
@@ -18,35 +19,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = AppConfig.class)
 public class SpringBootContextIntegrationTest {
 
-    @Autowired
-    private PlayerRepository playerRepository;
+  @Autowired private PlayerRepository playerRepository;
 
-    @Autowired
-    private TournamentRepository tournamentRepository;
+  @Autowired private TournamentRepository tournamentRepository;
 
-    @Autowired
-    private PlayerService playerService;
+  @Autowired private PlayerService playerService;
 
-    @Autowired
-    private TournamentService tournamentService;
+  @Autowired private TournamentService tournamentService;
 
-    @Test
-    public void whenContextLoads_thenPlayerRepositoryIsNotNull() {
-        assertThat(playerRepository).isNotNull();
-    }
+  @Autowired private DataController controller;
 
-    @Test
-    public void whenContextLoads_thenTournamentRepositoryIsNotNull() {
-        assertThat(tournamentRepository).isNotNull();
-    }
+  @Test
+  public void whenContextLoads_thenPlayerRepositoryIsNotNull() {
+    assertThat(playerRepository).isNotNull();
+  }
 
-    @Test
-    public void whenContextLoads_thenPlayerServiceIsNotNull() {
-        assertThat(playerService).isNotNull();
-    }
+  @Test
+  public void whenContextLoads_thenTournamentRepositoryIsNotNull() {
+    assertThat(tournamentRepository).isNotNull();
+  }
 
-    @Test
-    public void whenContextLoads_thenTournamentServiceIsNotNull() {
-        assertThat(tournamentService).isNotNull();
-    }
+  @Test
+  public void whenContextLoads_thenPlayerServiceIsNotNull() {
+    assertThat(playerService).isNotNull();
+  }
+
+  @Test
+  public void whenContextLoads_thenTournamentServiceIsNotNull() {
+    assertThat(tournamentService).isNotNull();
+  }
+
+  @Test
+  public void whenContextLoads_thenDataControllerIsNotNull() {
+    assertThat(controller).isNotNull();
+  }
 }

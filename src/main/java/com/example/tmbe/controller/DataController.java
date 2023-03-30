@@ -11,10 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
-import static java.util.stream.Collectors.toSet;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @Controller
@@ -25,11 +24,13 @@ public class DataController {
   @Autowired private TournamentService tournamentService;
 
   @GetMapping("/players")
-  public ResponseEntity<Set<PlayerDTO>> getAllPlayers() {
+  public ResponseEntity<List<PlayerDTO>> getAllPlayersOrderByIdAsc() {
 
     try {
-      Set<PlayerDTO> players =
-          playerService.getAllPlayers().stream().map(PlayerDTOMapper::toPlayerDTO).collect(toSet());
+      List<PlayerDTO> players =
+          playerService.getAllPlayersOrderByIdAsc().stream()
+              .map(PlayerDTOMapper::toPlayerDTO)
+              .collect(Collectors.toList());
 
       if (players.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -61,13 +62,13 @@ public class DataController {
   }
 
   @GetMapping("/tournaments")
-  public ResponseEntity<Set<TournamentDTO>> getAllTournaments() {
+  public ResponseEntity<List<TournamentDTO>> getAllTournamentsOrderByIdAsc() {
 
     try {
-      Set<TournamentDTO> tournaments =
-          tournamentService.getAllTournaments().stream()
+      List<TournamentDTO> tournaments =
+          tournamentService.getAllTournamentsOrderByIdAsc().stream()
               .map(TournamentDTOMapper::toTournamentDTO)
-              .collect(toSet());
+              .collect(Collectors.toList());
 
       if (tournaments.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

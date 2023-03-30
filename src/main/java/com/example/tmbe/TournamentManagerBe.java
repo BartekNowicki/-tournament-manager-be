@@ -8,19 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TournamentManagerBe {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TournamentManagerBe.class, args);
-
-
-
-		Tournament tournament = new Tournament();
-		tournament.setId(4L);
-		tournament.setType(TournamentType.SINGLES);
-		
-
-
-
-
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(TournamentManagerBe.class, args);
+  }
 }

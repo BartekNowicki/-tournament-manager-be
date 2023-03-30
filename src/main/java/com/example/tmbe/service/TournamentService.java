@@ -4,6 +4,7 @@ import com.example.tmbe.dataModel.Tournament;
 import com.example.tmbe.exception.NoEntityFoundCustomException;
 import com.example.tmbe.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +14,8 @@ import java.util.Optional;
 public class TournamentService {
   @Autowired TournamentRepository tournamentRepository;
 
-  public List<Tournament> getAllTournaments() {
-    return tournamentRepository.findAll();
+  public List<Tournament> getAllTournamentsOrderByIdAsc() {
+    return tournamentRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
   }
 
   public Optional<Tournament> getTournamentById(long id) {
