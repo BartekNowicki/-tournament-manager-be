@@ -34,13 +34,6 @@ public class TournamentService {
   public Tournament saveOrUpdateTournament(Tournament tournament) {
     Optional<Tournament> tournamentToUpdate = tournamentRepository.findById(tournament.getId());
     if (tournamentToUpdate.isEmpty()) {
-
-      System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      System.out.println("ATTEMPTING TO SAVE TOURNAMENT WITH DATES: ");
-      System.out.println(tournament.getStartDate());
-      System.out.println(tournament.getEndDate());
-      System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
       return tournamentRepository.save(tournament);
     } else {
       Tournament t = tournamentToUpdate.get();
@@ -49,6 +42,7 @@ public class TournamentService {
       t.setEndDate(tournament.getEndDate());
       t.setStartDate(tournament.getStartDate());
       t.setGroupSize(tournament.getGroupSize());
+      t.setParticipatingPlayers(tournament.getParticipatingPlayers());
       return tournamentRepository.save(t);
     }
   }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-//@CrossOrigin(origins = "http://localhost:5173")
+// @CrossOrigin(origins = "http://localhost:5173")
 @CrossOrigin(origins = "http://localhost:5174")
 @Controller
 @RequestMapping("/api/data")
@@ -157,81 +157,4 @@ public class DataController {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-  //  @GetMapping("/tester_devices")
-  //  public ResponseEntity<List<TesterDeviceDTO>> getAllTesterDevices() {
-  //    try {
-  //      List<TesterDeviceDTO> testerDevices =
-  //          dataService.getAllTesterDevices().stream()
-  //              .map(testerDeviceDTOmapper::toTesterDeviceDTO)
-  //              .collect(toList());
-  //      ;
-  //
-  //      if (testerDevices.isEmpty()) {
-  //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  //      }
-  //
-  //      return new ResponseEntity<>(testerDevices, HttpStatus.OK);
-  //    } catch (Exception e) {
-  //      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-  //    }
-  //  }
-  //
-  //  @PostMapping("/match")
-  //  public ResponseEntity<Map<Long, Integer>> getAllMatchingTestersRankedByExperience(
-  //      @RequestBody Map<String, Set> criteria) {
-  //
-  //    if (criteria.isEmpty()) {
-  //      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  //    }
-  //
-  //    List<String> countries = criteria.get("countries").stream().toList();
-  //    List<String> devices = criteria.get("devices").stream().toList();
-  //
-  //    if (countries == null || countries.isEmpty() || devices == null || devices.isEmpty()) {
-  //      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-  //    }
-  //
-  //    List<TesterDTOwithDeviceNamesOnly> testers = new ArrayList<>();
-  //
-  //    try {
-  //
-  //      for (String country : countries) {
-  //
-  //        if (country == null || country == "") {
-  //          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  //        }
-  //
-  //        testers.addAll(dataService.findTestersByCountry(country));
-  //      }
-  //
-  //      List<TesterDTOwithDeviceNamesOnly> matchingTesters =
-  //          testers.stream()
-  //              .filter(
-  //                  tester ->
-  //                      tester.getOwnedDeviceNames().stream()
-  //                          .anyMatch(name -> (devices.contains(name))))
-  //              .collect(toList());
-  //
-  //      Map<Long, Integer> testerExperience = new HashMap<>();
-  //      matchingTesters.stream()
-  //          .forEach(
-  //              tester ->
-  //                  testerExperience.put(
-  //                      tester.getTesterId(),
-  //                      dataService.totalBugsFiled(tester.getTesterId(), devices)));
-  //
-  //      Map<Long, Integer> testerExperienceSorted =
-  //          testerExperience.entrySet().stream()
-  //              .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-  //              .collect(
-  //                  Collectors.toMap(
-  //                      Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1,
-  // LinkedHashMap::new));
-  //
-  //      return new ResponseEntity(testerExperienceSorted, HttpStatus.OK);
-  //    } catch (Exception e) {
-  //      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-  //    }
-  //  }
 }

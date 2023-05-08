@@ -2,6 +2,7 @@ package com.example.tmbe.dataModel;
 
 import com.example.tmbe.enumConverter.TournamentType;
 import com.example.tmbe.enumConverter.TournamentTypeConverter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +19,6 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.Set;
-
 
 @Entity
 @Getter
@@ -28,7 +29,7 @@ import java.util.Set;
 public class Tournament {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private long id;
 
@@ -48,8 +49,19 @@ public class Tournament {
   @Column(name = "comment")
   private String comment;
 
+  // The ownership of the relation is determined by the mappedBy attribute. The entity that isn’t the owner will have the mappedBy attribute.
+  // => PLAYER is the OWNER
+  @JsonBackReference
   @ManyToMany(mappedBy = "playedTournaments")
   private Set<Player> participatingPlayers;
+
+  //JPA will execute everything inside this method before removing an entity:
+  @PreRemove
+  private void removePlayerAssociations() {
+    for (Player player: this.participatingPlayers) {
+      player.getPlayedTournaments().remove(this);
+    }
+  }
 
   @Override
   public String toString() {

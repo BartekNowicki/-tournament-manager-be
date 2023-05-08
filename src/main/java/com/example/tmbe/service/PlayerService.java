@@ -1,6 +1,7 @@
 package com.example.tmbe.service;
 
 import com.example.tmbe.dataModel.Player;
+import com.example.tmbe.dataModel.Tournament;
 import com.example.tmbe.exception.NoEntityFoundCustomException;
 import com.example.tmbe.repository.*;
 
@@ -28,8 +29,12 @@ public class PlayerService {
     if (playerToDelete.isEmpty()) {
       throw new NoEntityFoundCustomException("No player with that id exists: " + id);
     }
-    playerRepository.delete(playerToDelete.get());
-    return playerToDelete.get();
+    Player playerToBeDeleted = playerToDelete.get();
+//    for (Tournament tournament : playerToBeDeleted.getPlayedTournaments()) {
+//      playerToBeDeleted.removeTournament(tournament);
+//    }
+    playerRepository.delete(playerToBeDeleted);
+    return playerToBeDeleted;
   }
 
   public Player saveOrUpdatePlayer(Player player) {
@@ -43,6 +48,7 @@ public class PlayerService {
       p.setComment(player.getComment());
       p.setIsChecked(player.getIsChecked());
       p.setStrength(player.getStrength());
+      p.setPlayedTournaments(player.getPlayedTournaments());
       return playerRepository.save(p);
     }
   }

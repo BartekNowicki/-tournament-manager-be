@@ -1,7 +1,10 @@
 package com.example.tmbe.dto;
 
+import com.example.tmbe.dataModel.Tournament;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.Set;
 
 @AllArgsConstructor
 @Getter

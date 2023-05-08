@@ -1,5 +1,6 @@
 package com.example.tmbe.dataModel;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -14,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,7 +27,7 @@ import java.util.Set;
 public class Player {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private long id;
 
@@ -45,12 +46,24 @@ public class Player {
   @Column(name = "comment")
   private String comment;
 
-  @ManyToMany
+  // The ownership of the relation is determined by the mappedBy attribute. The entity that isn’t
+  // the owner will have the mappedBy attribute => Player is the OWNER
+  // Bidirectional @ManyToMany, two parents, one owner (Player)
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
       name = "player_tournament",
-      joinColumns = @JoinColumn(name = "player_id"),
-      inverseJoinColumns = @JoinColumn(name = "tournament_id"))
-  private Set<Tournament> playedTournaments;
+      joinColumns = {
+        @JoinColumn(name = "player_id", referencedColumnName = "id"),
+      },
+      inverseJoinColumns = {
+        @JoinColumn(name = "tournament_id", referencedColumnName = "id"),
+      })
+  private Set<Tournament> playedTournaments = new HashSet<>();
+
+  public void removeTournament(Tournament tournament){
+    this.playedTournaments.remove(tournament);
+    tournament.getParticipatingPlayers().remove(this);
+  }
 
   @Override
   public String toString() {
