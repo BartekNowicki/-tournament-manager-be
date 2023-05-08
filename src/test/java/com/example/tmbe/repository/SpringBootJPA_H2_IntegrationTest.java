@@ -17,6 +17,7 @@ import javax.ws.rs.core.Application;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = Application.class)
 public class SpringBootJPA_H2_IntegrationTest {
 
-  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", List.of());
+  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of());
 
   Player player2 =
-      new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", List.of());
+      new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of());
 
   Tournament tournament1 =
       new Tournament(
@@ -38,10 +39,10 @@ public class SpringBootJPA_H2_IntegrationTest {
           new Date(),
           3,
           "tournament1 was awesome",
-          List.of(player1, player2));
+          Set.of(player1, player2));
   Tournament tournament2 =
       new Tournament(
-          2L, TournamentType.DOUBLES, new Date(), new Date(), 6, "tournament1 was awesome", List.of(player1));
+          2L, TournamentType.DOUBLES, new Date(), new Date(), 6, "tournament1 was awesome", Set.of(player1));
 
   @Autowired private PlayerRepository playerRepository;
   @Autowired private TournamentRepository tournamentRepository;

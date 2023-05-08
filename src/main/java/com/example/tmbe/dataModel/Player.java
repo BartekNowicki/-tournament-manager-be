@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -50,7 +50,7 @@ public class Player {
       name = "player_tournament",
       joinColumns = @JoinColumn(name = "player_id"),
       inverseJoinColumns = @JoinColumn(name = "tournament_id"))
-  private List<Tournament> playedTournaments = new ArrayList<>();
+  private Set<Tournament> playedTournaments;
 
   @Override
   public String toString() {

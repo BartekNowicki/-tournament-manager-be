@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,12 +39,12 @@ public class DataControllerTest {
   @Autowired private PlayerRepository playerRepository;
   @Autowired private TournamentRepository tournamentRepository;
 
-  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", List.of());
+  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of());
 
   Player player2 =
-      new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", List.of());
+      new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of());
 
-  Player player3 = new Player(3L, true, "Moe", "Broe", 9, "Moe cannot play", List.of());
+  Player player3 = new Player(3L, true, "Moe", "Broe", 9, "Moe cannot play", Set.of());
 
   public DataControllerTest() throws JSONException {}
 
@@ -65,7 +66,7 @@ public class DataControllerTest {
           new Date(),
           3,
           "tournament1 was awesome",
-          List.of(player1, player2));
+          Set.of(player1, player2));
   Tournament tournament2 =
       new Tournament(
           2L,
@@ -74,7 +75,7 @@ public class DataControllerTest {
           new Date(),
           6,
           "tournament2 was also awesome",
-          List.of(player1));
+          Set.of(player1));
 
   @BeforeEach
   public void setUp() {

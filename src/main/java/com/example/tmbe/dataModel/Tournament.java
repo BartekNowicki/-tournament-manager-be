@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -49,7 +49,7 @@ public class Tournament {
   private String comment;
 
   @ManyToMany(mappedBy = "playedTournaments")
-  List<Player> participatingPlayers;
+  private Set<Player> participatingPlayers;
 
   @Override
   public String toString() {
