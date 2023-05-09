@@ -12,6 +12,7 @@ public class TournamentDTOMapper {
         tournament.getStartDate(),
         tournament.getEndDate(),
         tournament.getGroupSize(),
-        tournament.getComment());
+        tournament.getComment(),
+        tournament.getParticipatingPlayers());
   }
 }

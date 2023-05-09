@@ -30,9 +30,9 @@ public class PlayerService {
       throw new NoEntityFoundCustomException("No player with that id exists: " + id);
     }
     Player playerToBeDeleted = playerToDelete.get();
-//    for (Tournament tournament : playerToBeDeleted.getPlayedTournaments()) {
-//      playerToBeDeleted.removeTournament(tournament);
-//    }
+    for (Tournament tournament : playerToBeDeleted.getPlayedTournaments()) {
+      playerToBeDeleted.removeTournament(tournament);
+    }
     playerRepository.delete(playerToBeDeleted);
     return playerToBeDeleted;
   }
@@ -40,6 +40,9 @@ public class PlayerService {
   public Player saveOrUpdatePlayer(Player player) {
     Optional<Player> playerToUpdate = playerRepository.findById(player.getId());
     if (playerToUpdate.isEmpty()) {
+      for (Tournament tournament : player.getPlayedTournaments()) {
+        tournament.addPlayer(player);
+      }
       return playerRepository.save(player);
     } else {
       Player p = playerToUpdate.get();

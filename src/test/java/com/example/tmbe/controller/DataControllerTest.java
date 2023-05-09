@@ -49,12 +49,24 @@ public class DataControllerTest {
 
   JSONObject getAnotherJoe() throws JSONException {
     return new JSONObject(
-        "{\"id\":\"3\",\"isChecked\":\"false\",\"firstName\":\"anotherJoe\",\"lastName\":\"anotherJoe\",\"strength\":\"0\",\"comment\":\"Here goes another Joe\"}");
+            "{\"id\":\"3\",\"isChecked\":\"false\",\"firstName\":\"anotherJoe\",\"lastName\":\"anotherJoe\",\"strength\":\"0\",\"comment\":\"Here goes another Joe\"}");
   }
 
   JSONObject getSameJoeChangeName() throws JSONException {
     return new JSONObject(
-        "{\"id\":\"1\",\"isChecked\":\"false\",\"firstName\":\"sameJoeChangedName\",\"lastName\":\"anotherJoe\",\"strength\":\"0\",\"comment\":\"Here goes another Joe\"}");
+        "{\"id\":\"1\",\"isChecked\":\"false\",\"firstName\":\"sameJoeChangedName\",\"lastName\":\"sameJoeChangedName\",\"strength\":\"0\",\"comment\":\"Here goes another Joe\"}");
+  }
+
+  JSONObject getPlayerWithTournaments() throws JSONException {
+    return new JSONObject(
+        "{\"id\":\"1\",\"isChecked\":\"false\",\"firstName\":\"playerWithTournament\",\"lastName\":\"playerWithTournamentLastName\",\"strength\":\"0\",\"comment\":\"Here goes playerWithTournament\",\"playedTournaments\":[\n"
+            + "   {   \"id\": 3,\n"
+            + "      \"type\": \"DOUBLES\",\n"
+            + "      \"startDate\": \"2000-12-10T23:00:00.000+00:00\",\n"
+            + "      \"endDate\": \"2000-12-20T23:00:00.000+00:00\",\n"
+            + "      \"groupSize\": 1,\n"
+            + "      \"comment\": \"noComment111\",\n"
+            + "      \"participatingPlayers\": []}]}");
   }
 
   Tournament tournament1 =
@@ -117,7 +129,7 @@ public class DataControllerTest {
         .andExpect(jsonPath("$.[0].id").value(equalTo(2)))
         .andExpect(jsonPath("$.[1].id").value(equalTo(3)))
         .andExpect(jsonPath("$.[0].type").value(equalTo(TournamentType.DOUBLES.name())))
-        .andExpect(jsonPath("$.[1].type").value(equalTo(TournamentType.SINGLES.name())));
+        .andExpect(jsonPath("$.[1].type").value(equalTo(TournamentType.DOUBLES.name())));
   }
 
   @Test
@@ -207,6 +219,31 @@ public class DataControllerTest {
   }
 
   @Test
+  void saveOrUpdatePlayer_saveNew_ManyToManyPropagation_success() throws Exception {
+    MockHttpServletRequestBuilder builder =
+            MockMvcRequestBuilders.put("/api/data/players")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .characterEncoding("UTF-8")
+                    .content(this.getPlayerWithTournaments().toString());
+
+    this.mockMvc
+            .perform(builder)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.[0]").doesNotExist())
+            .andExpect(jsonPath("$.playedTournaments.[0].id").value(equalTo(3)))
+            .andExpect(jsonPath("$.playedTournaments.[0].type").value(equalTo("DOUBLES")))
+            .andDo(
+                    result ->
+                            this.mockMvc
+                                    .perform(get("/api/data/tournaments/3"))
+                                    .andDo(print())
+                                    .andExpect(status().isOk())
+                                    .andExpect(jsonPath("$.participatingPlayers.[0].firstName").value(equalTo("playerWithTournament"))));
+  };
+
+  @Test
   void saveOrUpdatePlayer_UpdateOld_success() throws Exception {
     MockHttpServletRequestBuilder builder =
         MockMvcRequestBuilders.put("/api/data/players")
@@ -234,8 +271,8 @@ public class DataControllerTest {
 
     this.mockMvc
         .perform(builder)
+            .andExpect(status().isOk())
         .andDo(print())
-        .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(equalTo(1)))
         .andExpect(jsonPath("$.firstName").value(not(equalTo("Joe"))));
   }

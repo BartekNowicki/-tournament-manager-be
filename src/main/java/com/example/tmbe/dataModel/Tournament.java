@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -49,18 +49,18 @@ public class Tournament {
   @Column(name = "comment")
   private String comment;
 
-  // The ownership of the relation is determined by the mappedBy attribute. The entity that isn’t the owner will have the mappedBy attribute.
-  // => PLAYER is the OWNER
+  // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
   @JsonBackReference
   @ManyToMany(mappedBy = "playedTournaments")
-  private Set<Player> participatingPlayers;
+  private Set<Player> participatingPlayers = new HashSet<>();
 
-  //JPA will execute everything inside this method before removing an entity:
-  @PreRemove
-  private void removePlayerAssociations() {
-    for (Player player: this.participatingPlayers) {
-      player.getPlayedTournaments().remove(this);
-    }
+  public void addPlayer(Player player){
+    this.participatingPlayers.add(player);
+    player.getPlayedTournaments().add(this);
+  }
+  public void removePlayer(Player player){
+    this.participatingPlayers.remove(player);
+    player.getPlayedTournaments().remove(this);
   }
 
   @Override

@@ -4,6 +4,7 @@ import com.example.tmbe.dataModel.Tournament;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -15,8 +16,9 @@ public class PlayerDTO {
   private String lastName;
   private int strength;
   private String comment;
+  private Set<Tournament> playedTournaments;
 
   public static PlayerDTO badPlayerDTO(String message) {
-    return new PlayerDTO(0, false, null, null, 0, message);
+    return new PlayerDTO(0, false, null, null, 0, message, Set.of());
   }
 }

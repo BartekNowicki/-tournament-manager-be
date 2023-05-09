@@ -1,5 +1,6 @@
 package com.example.tmbe.service;
 
+import com.example.tmbe.dataModel.Player;
 import com.example.tmbe.dataModel.Tournament;
 import com.example.tmbe.exception.NoEntityFoundCustomException;
 import com.example.tmbe.repository.TournamentRepository;
@@ -27,13 +28,20 @@ public class TournamentService {
     if (tournamentToDelete.isEmpty()) {
       throw new NoEntityFoundCustomException("No tournament with that id exists: " + id);
     }
-    tournamentRepository.delete(tournamentToDelete.get());
-    return tournamentToDelete.get();
+    Tournament tournamentToBeDeleted = tournamentToDelete.get();
+    for (Player player : tournamentToBeDeleted.getParticipatingPlayers()) {
+      tournamentToBeDeleted.removePlayer(player);
+    }
+    tournamentRepository.delete(tournamentToBeDeleted);
+    return tournamentToBeDeleted;
   }
 
   public Tournament saveOrUpdateTournament(Tournament tournament) {
     Optional<Tournament> tournamentToUpdate = tournamentRepository.findById(tournament.getId());
     if (tournamentToUpdate.isEmpty()) {
+      for (Player player : tournament.getParticipatingPlayers()) {
+        player.addTournament(tournament);
+      }
       return tournamentRepository.save(tournament);
     } else {
       Tournament t = tournamentToUpdate.get();
