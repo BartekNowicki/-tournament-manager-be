@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PlayerService {
@@ -46,12 +48,14 @@ public class PlayerService {
       return playerRepository.save(player);
     } else {
       Player p = playerToUpdate.get();
+      Set<Tournament> totalTournamentsPlayed = new HashSet<>(player.getPlayedTournaments());
+      totalTournamentsPlayed.addAll(p.getPlayedTournaments());
       p.setFirstName(player.getFirstName());
       p.setLastName(player.getLastName());
       p.setComment(player.getComment());
       p.setIsChecked(player.getIsChecked());
       p.setStrength(player.getStrength());
-      p.setPlayedTournaments(player.getPlayedTournaments());
+      p.setPlayedTournaments(totalTournamentsPlayed);
       return playerRepository.save(p);
     }
   }

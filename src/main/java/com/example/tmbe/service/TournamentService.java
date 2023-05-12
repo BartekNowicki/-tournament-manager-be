@@ -14,6 +14,7 @@ import java.util.Optional;
 @Service
 public class TournamentService {
   @Autowired TournamentRepository tournamentRepository;
+  @Autowired PlayerService playerService;
 
   public List<Tournament> getAllTournamentsOrderByIdAsc() {
     return tournamentRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
@@ -39,10 +40,12 @@ public class TournamentService {
   public Tournament saveOrUpdateTournament(Tournament tournament) {
     Optional<Tournament> tournamentToUpdate = tournamentRepository.findById(tournament.getId());
     if (tournamentToUpdate.isEmpty()) {
+      Tournament savedTournament = tournamentRepository.save(tournament);
       for (Player player : tournament.getParticipatingPlayers()) {
-        player.addTournament(tournament);
+        player.addTournament(savedTournament);
+        playerService.saveOrUpdatePlayer(player); // culprit
       }
-      return tournamentRepository.save(tournament);
+      return savedTournament;
     } else {
       Tournament t = tournamentToUpdate.get();
       t.setType(tournament.getType());
