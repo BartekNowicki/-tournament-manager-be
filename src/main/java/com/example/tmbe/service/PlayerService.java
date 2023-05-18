@@ -59,4 +59,8 @@ public class PlayerService {
       return playerRepository.save(p);
     }
   }
+
+  public Set<Player> findAllByIsChecked(boolean b) {
+    return playerRepository.findByIsChecked(true);
+  }
 }

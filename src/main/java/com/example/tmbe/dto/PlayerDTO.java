@@ -4,7 +4,6 @@ import com.example.tmbe.dataModel.Tournament;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor

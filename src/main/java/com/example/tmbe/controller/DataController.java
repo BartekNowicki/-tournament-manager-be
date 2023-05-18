@@ -157,4 +157,19 @@ public class DataController {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  @PostMapping("/tournaments")
+  public ResponseEntity<TournamentDTO> assignPlayersToTournament(@RequestParam Long tournamentId) {
+
+    try {
+
+      TournamentDTO savedOrUpdatedTournament =
+          TournamentDTOMapper.toTournamentDTO(
+              tournamentService.assignPlayersToTournament(tournamentId));
+
+      return new ResponseEntity<>(savedOrUpdatedTournament, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

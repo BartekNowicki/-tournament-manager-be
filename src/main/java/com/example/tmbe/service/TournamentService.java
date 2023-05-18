@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TournamentService {
@@ -41,10 +42,6 @@ public class TournamentService {
     Optional<Tournament> tournamentToUpdate = tournamentRepository.findById(tournament.getId());
     if (tournamentToUpdate.isEmpty()) {
       Tournament savedTournament = tournamentRepository.save(tournament);
-      for (Player player : tournament.getParticipatingPlayers()) {
-        player.addTournament(savedTournament);
-        playerService.saveOrUpdatePlayer(player); // culprit
-      }
       return savedTournament;
     } else {
       Tournament t = tournamentToUpdate.get();
@@ -55,6 +52,27 @@ public class TournamentService {
       t.setGroupSize(tournament.getGroupSize());
       t.setParticipatingPlayers(tournament.getParticipatingPlayers());
       return tournamentRepository.save(t);
+    }
+  }
+
+  public Tournament assignPlayersToTournament(Long tournamentId)
+      throws NoEntityFoundCustomException {
+    Optional<Tournament> tournamentToUpdate = tournamentRepository.findById(tournamentId);
+    if (tournamentToUpdate.isEmpty()) {
+      throw new NoEntityFoundCustomException("No tournament with that id exists: " + tournamentId);
+    } else {
+      Tournament tournamentToAssignAllCheckedPlayersTo = tournamentToUpdate.get();
+      Set<Player> participatingPlayers = playerService.findAllByIsChecked(true);
+      tournamentToAssignAllCheckedPlayersTo.setParticipatingPlayers(participatingPlayers);
+
+      for (Player player : tournamentToAssignAllCheckedPlayersTo.getParticipatingPlayers()) {
+        player.addTournament(tournamentToAssignAllCheckedPlayersTo);
+      }
+
+      Tournament tournamentWithAssignedPlayers =
+          saveOrUpdateTournament(tournamentToAssignAllCheckedPlayersTo);
+
+      return tournamentWithAssignedPlayers;
     }
   }
 }

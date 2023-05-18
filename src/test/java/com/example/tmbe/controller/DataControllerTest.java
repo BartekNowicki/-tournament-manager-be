@@ -243,23 +243,6 @@ public class DataControllerTest {
   }
 
   @Test
-  void saveOrUpdateTournament_saveNew_ManyToManyPropagation_success() throws Exception {
-    MockHttpServletRequestBuilder builder =
-        MockMvcRequestBuilders.put("/api/data/tournaments")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON)
-            .characterEncoding("UTF-8")
-            .content(this.getNewTournament().toString());
-
-    this.mockMvc
-        .perform(builder)
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.[0]").doesNotExist())
-        .andExpect(jsonPath("$.participatingPlayers.[0].playedTournaments[0].id").value(equalTo(3)));
-  }
-
-  @Test
   void saveOrUpdatePlayer_saveNew_ManyToManyPropagation_success() throws Exception {
     MockHttpServletRequestBuilder builder =
         MockMvcRequestBuilders.put("/api/data/players")
