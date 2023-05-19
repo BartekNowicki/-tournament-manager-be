@@ -64,12 +64,21 @@ public class TournamentService {
       throw new NoEntityFoundCustomException("No tournament with that id exists: " + tournamentId);
     } else {
       Tournament tournamentToAssignAllCheckedPlayersTo = tournamentToUpdate.get();
+      //      Set<Player> uncheckedPlayers = playerService.findAllByIsChecked(false); ===> ASSERT
+      // TRUE
+      Set<Player> playersRemovedFromTournament =
+          new HashSet<>(tournamentToAssignAllCheckedPlayersTo.getParticipatingPlayers());
       Set<Player> participatingPlayers = playerService.findAllByIsChecked(true);
+      playersRemovedFromTournament.removeAll(participatingPlayers);
       participatingPlayers.remove(playerService.getPlayerById(-1L));
       tournamentToAssignAllCheckedPlayersTo.setParticipatingPlayers(participatingPlayers);
 
       for (Player player : tournamentToAssignAllCheckedPlayersTo.getParticipatingPlayers()) {
         player.addTournament(tournamentToAssignAllCheckedPlayersTo);
+      }
+
+      for (Player player : playersRemovedFromTournament) {
+        player.removeTournament(tournamentToAssignAllCheckedPlayersTo);
       }
 
       Tournament tournamentWithAssignedPlayers =

@@ -48,7 +48,8 @@ public class Player {
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
   // The ownership of the relation is determined by the mappedBy attribute. The entity that isn’t
-  // the owner will have the mappedBy attribute => Player is the owning parent, Tournament is the referencing side
+  // the owner will have the mappedBy attribute => Player is the owning parent, Tournament is the
+  // referencing side
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
@@ -61,11 +62,12 @@ public class Player {
       })
   private Set<Tournament> playedTournaments = new HashSet<>();
 
-  public void addTournament(Tournament tournament){
+  public void addTournament(Tournament tournament) {
     this.playedTournaments.add(tournament);
     tournament.getParticipatingPlayers().add(this);
   }
-  public void removeTournament(Tournament tournament){
+
+  public void removeTournament(Tournament tournament) {
     this.playedTournaments.remove(tournament);
     tournament.getParticipatingPlayers().remove(this);
   }
