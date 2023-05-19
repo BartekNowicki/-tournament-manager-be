@@ -32,7 +32,8 @@ public class PlayerService {
       throw new NoEntityFoundCustomException("No player with that id exists: " + id);
     }
     Player playerToBeDeleted = playerToDelete.get();
-    for (Tournament tournament : playerToBeDeleted.getPlayedTournaments()) {
+    // need a new hashset to avoid the concurrent modification exception
+    for (Tournament tournament : new HashSet<>(playerToBeDeleted.getPlayedTournaments())) {
       playerToBeDeleted.removeTournament(tournament);
     }
     playerRepository.delete(playerToBeDeleted);

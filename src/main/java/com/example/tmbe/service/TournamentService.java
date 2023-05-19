@@ -63,6 +63,7 @@ public class TournamentService {
     } else {
       Tournament tournamentToAssignAllCheckedPlayersTo = tournamentToUpdate.get();
       Set<Player> participatingPlayers = playerService.findAllByIsChecked(true);
+      participatingPlayers.remove(playerService.getPlayerById(-1L));
       tournamentToAssignAllCheckedPlayersTo.setParticipatingPlayers(participatingPlayers);
 
       for (Player player : tournamentToAssignAllCheckedPlayersTo.getParticipatingPlayers()) {
