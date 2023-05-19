@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +32,8 @@ public class TournamentService {
       throw new NoEntityFoundCustomException("No tournament with that id exists: " + id);
     }
     Tournament tournamentToBeDeleted = tournamentToDelete.get();
-    for (Player player : tournamentToBeDeleted.getParticipatingPlayers()) {
+    // need a new hashset to avoid the concurrent modification exception
+    for (Player player : new HashSet<>(tournamentToBeDeleted.getParticipatingPlayers())) {
       tournamentToBeDeleted.removePlayer(player);
     }
     tournamentRepository.delete(tournamentToBeDeleted);
