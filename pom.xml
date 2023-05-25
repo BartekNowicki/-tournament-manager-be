@@ -108,6 +108,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>tm_prod</finalName>
     </build>
 
     <profiles>
