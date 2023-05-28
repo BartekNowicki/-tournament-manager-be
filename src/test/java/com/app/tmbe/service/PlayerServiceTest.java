@@ -1,7 +1,7 @@
 package com.app.tmbe.service;
 
 import com.app.tmbe.dataModel.Player;
-import com.app.tmbe.dataModel.Tournament;
+import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
 import com.app.tmbe.enumConverter.TournamentType;
 import com.app.tmbe.repository.PlayerRepository;
@@ -92,24 +92,24 @@ class PlayerServiceTest {
     // given
     Player player =
         new Player(10L, true, "Joe", "Doe", 10, "Joe Doe is a great player", new HashSet<>());
-    Tournament tournament =
-        new Tournament(
+    SinglesTournament singlesTournament =
+        new SinglesTournament(
             20L,
             TournamentType.DOUBLES,
             new Date(),
             new Date(),
             1,
-            "the tournament was awesome",
+            "the singlesTournament was awesome",
             new HashSet<>());
 
-    Set<Tournament> playedTournaments = new HashSet<Tournament>();
+    Set<SinglesTournament> playedSinglesTournaments = new HashSet<SinglesTournament>();
     Set<Player> participatingPlayers = new HashSet<Player>();
 
-    playedTournaments.add(tournament);
+    playedSinglesTournaments.add(singlesTournament);
     participatingPlayers.add(player);
 
-    player.setPlayedTournaments(playedTournaments);
-    tournament.setParticipatingPlayers(participatingPlayers);
+    player.setPlayedSinglesTournaments(playedSinglesTournaments);
+    singlesTournament.setParticipatingPlayers(participatingPlayers);
 
     // when
     when(playerRepository.findById(1L)).thenReturn(Optional.ofNullable(player));
@@ -118,7 +118,7 @@ class PlayerServiceTest {
     // then
     assertEquals(10L, deletedPlayer.getId());
     assertEquals(0L, participatingPlayers.size());
-    assertEquals(0L, playedTournaments.size());
+    assertEquals(0L, playedSinglesTournaments.size());
 
     verify(playerRepository, times(1)).findById(1L);
   }

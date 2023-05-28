@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.app.tmbe.dataModel.Player;
-import com.app.tmbe.dataModel.Tournament;
+import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.enumConverter.TournamentTypeConverter;
-import com.app.tmbe.dataModel.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -63,14 +62,14 @@ public class CSVHelper {
     }
   }
 
-  public static List<Tournament> csvToTournaments(InputStream is) {
+  public static List<SinglesTournament> csvToTournaments(InputStream is) {
     try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
         CSVParser csvParser =
             new CSVParser(
                 fileReader,
                 CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim()); ) {
 
-      List<Tournament> tournaments = new ArrayList<>();
+      List<SinglesTournament> singlesTournaments = new ArrayList<>();
 
       Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
@@ -80,8 +79,8 @@ public class CSVHelper {
 
       for (CSVRecord csvRecord : csvRecords) {
 
-        Tournament tournament =
-            new Tournament(
+        SinglesTournament singlesTournament =
+            new SinglesTournament(
                 Long.parseLong(csvRecord.get("id")),
                 tournamentTypeConverter.convertToEntityAttribute(csvRecord.get("type")),
                 df.parse(csvRecord.get("startDate")),
@@ -89,10 +88,10 @@ public class CSVHelper {
                 Integer.parseInt(csvRecord.get("groupSize")),
                 csvRecord.get("comment"),
                 null);
-        tournaments.add(tournament);
+        singlesTournaments.add(singlesTournament);
       }
 
-      return tournaments;
+      return singlesTournaments;
     } catch (IOException | ParseException e) {
 
       throw new RuntimeException("fail to parse CSV file: " + e.getMessage());

@@ -3,9 +3,9 @@ package com.app.tmbe.dataModel;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -22,8 +22,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "players")
-public class Player {
+@Table(name = "teams")
+public class Team {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,36 +45,36 @@ public class Player {
   @Column(name = "comment")
   private String comment;
 
-  // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
+  // Bidirectional @ManyToMany, two parents, no children, one owner (Team)
   // The ownership of the relation is determined by the mappedBy attribute. The entity that isn’t
-  // the owner will have the mappedBy attribute => Player is the owning parent, SinglesTournament is
+  // the owner will have the mappedBy attribute => Team is the owning parent, DoublesTournament is
   // the
   // referencing side
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
-      name = "player_singles_tournament",
+      name = "team_doubles_tournament",
       joinColumns = {
-        @JoinColumn(name = "player_id", referencedColumnName = "id"),
+        @JoinColumn(name = "team_id", referencedColumnName = "id"),
       },
       inverseJoinColumns = {
-        @JoinColumn(name = "singles_tournament_id", referencedColumnName = "id"),
+        @JoinColumn(name = "doubles_tournament_id", referencedColumnName = "id"),
       })
-  private Set<SinglesTournament> playedSinglesTournaments = new HashSet<>();
+  private Set<DoublesTournament> playedDoublesTournaments = new HashSet<>();
 
-  public void addSinglesTournament(SinglesTournament singlesTournament) {
-    this.playedSinglesTournaments.add(singlesTournament);
-    singlesTournament.getParticipatingPlayers().add(this);
+  private void addDoublesTournament(DoublesTournament doublesTournament) {
+    this.playedDoublesTournaments.add(doublesTournament);
+    doublesTournament.getParticipatingTeams().add(this);
   }
 
-  public void removeSinglesTournament(SinglesTournament singlesTournament) {
-    this.playedSinglesTournaments.remove(singlesTournament);
-    singlesTournament.getParticipatingPlayers().remove(this);
+  public void removeDoublesTournament(DoublesTournament doublesTournament) {
+    this.playedDoublesTournaments.remove(doublesTournament);
+    doublesTournament.getParticipatingTeams().remove(this);
   }
 
   @Override
   public String toString() {
-    return "Player{"
+    return "Team{"
         + "id="
         + id
         + ", isChecked="
@@ -89,7 +89,7 @@ public class Player {
         + comment
         + '\''
         + ", players="
-        + playedSinglesTournaments.size()
+        + playedDoublesTournaments.size()
         + '}';
   }
 }

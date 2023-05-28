@@ -1,6 +1,6 @@
 package com.app.tmbe.controller;
 
-import com.app.tmbe.dataModel.Tournament;
+import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.enumConverter.TournamentType;
 import com.app.tmbe.repository.PlayerRepository;
@@ -60,7 +60,7 @@ public class DataControllerTest {
 
   JSONObject getPlayerWithTournaments() throws JSONException {
     return new JSONObject(
-        "{\"id\":\"1\",\"isChecked\":\"false\",\"firstName\":\"playerWithTournament\",\"lastName\":\"playerWithTournamentLastName\",\"strength\":\"0\",\"comment\":\"Here goes playerWithTournament\",\"playedTournaments\":[\n"
+        "{\"id\":\"1\",\"isChecked\":\"false\",\"firstName\":\"playerWithTournament\",\"lastName\":\"playerWithTournamentLastName\",\"strength\":\"0\",\"comment\":\"Here goes playerWithTournament\",\"playedSinglesTournaments\":[\n"
             + "   {   \"id\": 3,\n"
             + "      \"type\": \"DOUBLES\",\n"
             + "      \"startDate\": \"2000-12-10T23:00:00.000+00:00\",\n"
@@ -87,29 +87,29 @@ public class DataControllerTest {
             + "            \"lastName\": \"smith2changed\",\n"
             + "            \"strength\": 4,\n"
             + "            \"comment\": \"noComment20\",\n"
-            + "            \"playedTournaments\": []\n"
+            + "            \"playedSinglesTournaments\": []\n"
             + "        }\n"
             + "    ]\n"
             + "}");
   }
 
-  Tournament tournament1 =
-      new Tournament(
+  SinglesTournament singlesTournament1 =
+      new SinglesTournament(
           1L,
           TournamentType.SINGLES,
           new Date(),
           new Date(),
           3,
-          "tournament1 was awesome",
+          "singlesTournament1 was awesome",
           Set.of(player1, player2));
-  Tournament tournament2 =
-      new Tournament(
+  SinglesTournament singlesTournament2 =
+      new SinglesTournament(
           2L,
           TournamentType.DOUBLES,
           new Date(),
           new Date(),
           6,
-          "tournament2 was also awesome",
+          "singlesTournament2 was also awesome",
           Set.of(player1));
 
   @BeforeEach
@@ -117,8 +117,8 @@ public class DataControllerTest {
     playerRepository.save(player1);
     playerRepository.save(player2);
     playerRepository.save(player3);
-    tournamentRepository.save(tournament1);
-    tournamentRepository.save(tournament2);
+    tournamentRepository.save(singlesTournament1);
+    tournamentRepository.save(singlesTournament2);
   }
 
   @Test
@@ -152,8 +152,8 @@ public class DataControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.[0].id").value(equalTo(2)))
         .andExpect(jsonPath("$.[1].id").value(equalTo(3)))
-        .andExpect(jsonPath("$.[0].type").value(equalTo(TournamentType.DOUBLES.name())))
-        .andExpect(jsonPath("$.[1].type").value(equalTo(TournamentType.DOUBLES.name())));
+        .andExpect(jsonPath("$.[1].type").value(equalTo(TournamentType.DOUBLES.name())))
+        .andExpect(jsonPath("$.[0].type").value(equalTo(TournamentType.DOUBLES.name())));
   }
 
   @Test
@@ -256,8 +256,8 @@ public class DataControllerTest {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.[0]").doesNotExist())
-        .andExpect(jsonPath("$.playedTournaments.[0].id").value(equalTo(3)))
-        .andExpect(jsonPath("$.playedTournaments.[0].type").value(equalTo("DOUBLES")))
+        .andExpect(jsonPath("$.playedSinglesTournaments.[0].id").value(equalTo(3)))
+        .andExpect(jsonPath("$.playedSinglesTournaments.[0].type").value(equalTo("DOUBLES")))
         .andDo(
             result ->
                 this.mockMvc
@@ -268,7 +268,6 @@ public class DataControllerTest {
                         jsonPath("$.participatingPlayers.[0].firstName")
                             .value(equalTo("playerWithTournament"))));
   }
-  ;
 
   @Test
   void saveOrUpdatePlayer_UpdateOld_success() throws Exception {

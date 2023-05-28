@@ -1,7 +1,7 @@
 package com.app.tmbe.repository;
 
 import com.app.tmbe.dataModel.Player;
-import com.app.tmbe.dataModel.Tournament;
+import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.config.AppConfig;
 import com.app.tmbe.enumConverter.TournamentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,18 +30,18 @@ public class SpringBootJPA_H2_IntegrationTest {
   Player player2 =
       new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of());
 
-  Tournament tournament1 =
-      new Tournament(
+  SinglesTournament singlesTournament1 =
+      new SinglesTournament(
           1L,
           TournamentType.SINGLES,
           new Date(),
           new Date(),
           3,
-          "tournament1 was awesome",
+          "singlesTournament1 was awesome",
           Set.of(player1, player2));
-  Tournament tournament2 =
-      new Tournament(
-          2L, TournamentType.DOUBLES, new Date(), new Date(), 6, "tournament1 was awesome", Set.of(player1));
+  SinglesTournament singlesTournament2 =
+      new SinglesTournament(
+          2L, TournamentType.DOUBLES, new Date(), new Date(), 6, "singlesTournament1 was awesome", Set.of(player1));
 
   @Autowired private PlayerRepository playerRepository;
   @Autowired private TournamentRepository tournamentRepository;
@@ -50,8 +50,8 @@ public class SpringBootJPA_H2_IntegrationTest {
   void setUp() {
     playerRepository.save(player1);
     playerRepository.save(player2);
-    tournamentRepository.save(tournament1);
-    tournamentRepository.save(tournament2);
+    tournamentRepository.save(singlesTournament1);
+    tournamentRepository.save(singlesTournament2);
   }
 
   @Test
@@ -59,16 +59,16 @@ public class SpringBootJPA_H2_IntegrationTest {
 
     Optional<Player> pl1 = playerRepository.findById(1L);
     Optional<Player> pl2 = playerRepository.findById(2L);
-    Optional<Tournament> t1 = tournamentRepository.findById(1L);
-    Optional<Tournament> t2 = tournamentRepository.findById(2L);
+    Optional<SinglesTournament> t1 = tournamentRepository.findById(1L);
+    Optional<SinglesTournament> t2 = tournamentRepository.findById(2L);
 
     assertNotNull(pl1);
     assertNotNull(pl2);
     assertNotNull(t1);
     assertNotNull(t2);
     assertEquals(player1.getFirstName(), pl1.get().getFirstName());
-    assertEquals(tournament1.getGroupSize(), t1.get().getGroupSize());
-    assertEquals(tournament2.getGroupSize(), t2.get().getGroupSize());
+    assertEquals(singlesTournament1.getGroupSize(), t1.get().getGroupSize());
+    assertEquals(singlesTournament2.getGroupSize(), t2.get().getGroupSize());
   }
 
   //  @Test

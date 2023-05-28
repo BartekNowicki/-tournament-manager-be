@@ -1,7 +1,7 @@
 package com.app.tmbe.utils;
 
 import com.app.tmbe.dataModel.Player;
-import com.app.tmbe.dataModel.Tournament;
+import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.enumConverter.TournamentTypeConverter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -89,7 +89,7 @@ class CSVHelperTest {
   @Test
   void givenCSVFile_whenRead_thenContentsAsExpected_csvToTournaments()
       throws IOException, ParseException {
-    List<Tournament> tournaments = new ArrayList<>();
+    List<SinglesTournament> singlesTournaments = new ArrayList<>();
 
     Iterable<CSVRecord> csvRecords = tournamentsCsvParser.getRecords();
 
@@ -97,8 +97,8 @@ class CSVHelperTest {
 
     for (CSVRecord csvRecord : csvRecords) {
 
-      Tournament tournament =
-          new Tournament(
+      SinglesTournament singlesTournament =
+          new SinglesTournament(
               Long.parseLong(csvRecord.get("id")),
               tournamentTypeConverter.convertToEntityAttribute(csvRecord.get("type")),
               df.parse(csvRecord.get("startDate")),
@@ -106,12 +106,12 @@ class CSVHelperTest {
               Integer.parseInt(csvRecord.get("groupSize")),
               csvRecord.get("comment"),
               null);
-      tournaments.add(tournament);
+      singlesTournaments.add(singlesTournament);
 
-      tournaments.add(tournament);
+      singlesTournaments.add(singlesTournament);
     }
-    assertEquals(10, tournaments.size());
-    assertEquals(0, tournaments.get(1).getGroupSize());
-    assertEquals("singles", tournaments.get(1).getType().getNaming());
+    assertEquals(10, singlesTournaments.size());
+    assertEquals(0, singlesTournaments.get(1).getGroupSize());
+    assertEquals("singles", singlesTournaments.get(1).getType().getNaming());
   }
 }

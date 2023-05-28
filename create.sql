@@ -12,7 +12,7 @@
 
     insert into bugs_seq values ( 1 );
 
-    create table tournaments (
+    create table singlesTournaments (
        device_id bigint not null,
         description varchar(255),
         primary key (device_id)
@@ -78,7 +78,7 @@
 
     insert into bugs_seq values ( 1 );
 
-    create table tournaments (
+    create table singlesTournaments (
        device_id bigint not null,
         description varchar(255),
         primary key (device_id)
@@ -144,7 +144,7 @@
 
     insert into bugs_seq values ( 1 );
 
-    create table tournaments (
+    create table singlesTournaments (
        device_id bigint not null,
         description varchar(255),
         primary key (device_id)

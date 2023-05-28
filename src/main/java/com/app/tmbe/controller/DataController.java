@@ -1,13 +1,17 @@
 package com.app.tmbe.controller;
 
 import com.app.tmbe.dataModel.Player;
-import com.app.tmbe.dataModel.Tournament;
+import com.app.tmbe.dataModel.SinglesTournament;
+import com.app.tmbe.dataModel.Team;
 import com.app.tmbe.dto.PlayerDTO;
 import com.app.tmbe.dto.PlayerDTOMapper;
+import com.app.tmbe.dto.SinglesTournamentDTO;
+import com.app.tmbe.dto.TeamDTO;
+import com.app.tmbe.dto.TeamDTOMapper;
 import com.app.tmbe.dto.TournamentDTO;
 import com.app.tmbe.dto.TournamentDTOMapper;
+import com.app.tmbe.service.TeamService;
 import com.app.tmbe.service.TournamentService;
-import com.app.tmbe.dto.*;
 import com.app.tmbe.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 public class DataController {
 
   @Autowired private PlayerService playerService;
+  @Autowired private TeamService teamService;
   @Autowired private TournamentService tournamentService;
 
   @GetMapping("/players")
@@ -66,8 +71,45 @@ public class DataController {
     }
   }
 
+  @GetMapping("/teams")
+  public ResponseEntity<List<TeamDTO>> getAllTeamsOrderByIdAsc() {
+
+    try {
+      List<TeamDTO> teams =
+          teamService.getAllTeamsOrderByIdAsc().stream()
+              .map(TeamDTOMapper::toTeamDTO)
+              .collect(Collectors.toList());
+
+      if (teams.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      return new ResponseEntity<>(teams, HttpStatus.OK);
+
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @GetMapping("/teams/{id}")
+  public ResponseEntity<TeamDTO> getTeam(@PathVariable("id") long id) {
+
+    try {
+      Optional<TeamDTO> team = teamService.getTeamById(id).map(TeamDTOMapper::toTeamDTO);
+
+      if (team.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      return new ResponseEntity<>(team.get(), HttpStatus.OK);
+
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @GetMapping("/tournaments")
-  public ResponseEntity<List<TournamentDTO>> getAllTournamentsOrderByIdAsc() {
+  public ResponseEntity<List<? extends TournamentDTO>> getAllTournamentsOrderByIdAsc() {
 
     try {
       List<TournamentDTO> tournaments =
@@ -87,7 +129,7 @@ public class DataController {
   }
 
   @GetMapping("/tournaments/{id}")
-  public ResponseEntity<TournamentDTO> getTournament(@PathVariable("id") long id) {
+  public ResponseEntity<? extends TournamentDTO> getTournament(@PathVariable("id") long id) {
 
     try {
       Optional<TournamentDTO> tournament =
@@ -117,8 +159,22 @@ public class DataController {
     }
   }
 
+  @DeleteMapping("/teams/{id}")
+  public ResponseEntity<TeamDTO> deleteTeam(@PathVariable("id") long id) {
+
+    try {
+      TeamDTO deletedTeam = TeamDTOMapper.toTeamDTO(teamService.deleteTeamById(id));
+
+      return new ResponseEntity<>(deletedTeam, HttpStatus.OK);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      // return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(TeamDTO.badTeamDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @DeleteMapping("/tournaments/{id}")
-  public ResponseEntity<TournamentDTO> deleteTournament(@PathVariable("id") long id) {
+  public ResponseEntity<? extends TournamentDTO> deleteTournament(@PathVariable("id") long id) {
 
     try {
 
@@ -148,13 +204,28 @@ public class DataController {
     }
   }
 
+  @PutMapping("/teams")
+  public ResponseEntity<TeamDTO> saveOrUpdateTeam(@RequestBody Team team) {
+
+    try {
+
+      TeamDTO savedOrUpdatedTeam = TeamDTOMapper.toTeamDTO(teamService.saveOrUpdateTeam(team));
+
+      return new ResponseEntity<>(savedOrUpdatedTeam, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @PutMapping("/tournaments")
-  public ResponseEntity<TournamentDTO> saveOrUpdateTournament(@RequestBody Tournament tournament) {
+  public ResponseEntity<? extends TournamentDTO> saveOrUpdateTournament(
+      @RequestBody SinglesTournament singlesTournament) {
 
     try {
 
       TournamentDTO savedOrUpdatedTournament =
-          TournamentDTOMapper.toTournamentDTO(tournamentService.saveOrUpdateTournament(tournament));
+          TournamentDTOMapper.toTournamentDTO(
+              tournamentService.saveOrUpdateTournament(singlesTournament));
 
       return new ResponseEntity<>(savedOrUpdatedTournament, HttpStatus.OK);
     } catch (Exception e) {
@@ -163,13 +234,14 @@ public class DataController {
   }
 
   @PostMapping("/tournaments")
-  public ResponseEntity<TournamentDTO> assignPlayersToTournament(@RequestParam Long tournamentId) {
+  public ResponseEntity<? extends TournamentDTO> assignPlayersToSinglesTournament(
+      @RequestParam Long tournamentId) {
 
     try {
 
       TournamentDTO savedOrUpdatedTournament =
           TournamentDTOMapper.toTournamentDTO(
-              tournamentService.assignPlayersToTournament(tournamentId));
+              tournamentService.assignPlayersToSinglesTournament(tournamentId));
 
       return new ResponseEntity<>(savedOrUpdatedTournament, HttpStatus.OK);
     } catch (Exception e) {

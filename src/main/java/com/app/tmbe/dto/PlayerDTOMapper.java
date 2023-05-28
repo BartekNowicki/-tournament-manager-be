@@ -13,6 +13,6 @@ public class PlayerDTOMapper {
         player.getLastName(),
         player.getStrength(),
         player.getComment(),
-        player.getPlayedTournaments());
+        player.getPlayedSinglesTournaments());
   }
 }
