@@ -1,15 +1,17 @@
 package com.app.tmbe.controller;
 
-import com.app.tmbe.dataModel.Player;
+import com.app.tmbe.dataModel.DoublesTournament;
 import com.app.tmbe.dataModel.SinglesTournament;
+import com.app.tmbe.dataModel.TournamentRequestEntity;
+import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.dataModel.Team;
 import com.app.tmbe.dto.PlayerDTO;
 import com.app.tmbe.dto.PlayerDTOMapper;
-import com.app.tmbe.dto.SinglesTournamentDTO;
 import com.app.tmbe.dto.TeamDTO;
 import com.app.tmbe.dto.TeamDTOMapper;
 import com.app.tmbe.dto.TournamentDTO;
 import com.app.tmbe.dto.TournamentDTOMapper;
+import com.app.tmbe.enumConverter.TournamentType;
 import com.app.tmbe.service.TeamService;
 import com.app.tmbe.service.TournamentService;
 import com.app.tmbe.service.PlayerService;
@@ -128,12 +130,29 @@ public class DataController {
     }
   }
 
-  @GetMapping("/tournaments/{id}")
-  public ResponseEntity<? extends TournamentDTO> getTournament(@PathVariable("id") long id) {
+  @GetMapping("/tournaments/singles/{id}")
+  public ResponseEntity<? extends TournamentDTO> getSinglesTournament(@PathVariable("id") long id) {
 
     try {
       Optional<TournamentDTO> tournament =
-          tournamentService.getTournamentById(id).map(TournamentDTOMapper::toTournamentDTO);
+          tournamentService.getSinglesTournamentById(id).map(TournamentDTOMapper::toTournamentDTO);
+
+      if (tournament.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      return new ResponseEntity<>(tournament.get(), HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @GetMapping("/tournaments/doubles/{id}")
+  public ResponseEntity<? extends TournamentDTO> getDoublesTournament(@PathVariable("id") long id) {
+
+    try {
+      Optional<TournamentDTO> tournament =
+              tournamentService.getDoublesTournamentById(id).map(TournamentDTOMapper::toTournamentDTO);
 
       if (tournament.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -173,13 +192,13 @@ public class DataController {
     }
   }
 
-  @DeleteMapping("/tournaments/{id}")
-  public ResponseEntity<? extends TournamentDTO> deleteTournament(@PathVariable("id") long id) {
+  @DeleteMapping("/tournaments/singles/{id}")
+  public ResponseEntity<? extends TournamentDTO> deleteSinglesTournament(@PathVariable("id") long id) {
 
     try {
 
       TournamentDTO deletedTournament =
-          TournamentDTOMapper.toTournamentDTO(tournamentService.deleteTournamentById(id));
+          TournamentDTOMapper.toTournamentDTO(tournamentService.deleteSinglesTournamentById(id));
 
       return new ResponseEntity<>(deletedTournament, HttpStatus.OK);
     } catch (Exception e) {
@@ -187,6 +206,23 @@ public class DataController {
       // return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
       return new ResponseEntity<>(
           TournamentDTO.badTournamentDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @DeleteMapping("/tournaments/doubles/{id}")
+  public ResponseEntity<? extends TournamentDTO> deleteDoublesTournament(@PathVariable("id") long id) {
+
+    try {
+
+      TournamentDTO deletedTournament =
+              TournamentDTOMapper.toTournamentDTO(tournamentService.deleteDoublesTournamentById(id));
+
+      return new ResponseEntity<>(deletedTournament, HttpStatus.OK);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      // return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>(
+              TournamentDTO.badTournamentDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -219,17 +255,47 @@ public class DataController {
 
   @PutMapping("/tournaments")
   public ResponseEntity<? extends TournamentDTO> saveOrUpdateTournament(
-      @RequestBody SinglesTournament singlesTournament) {
+      //@RequestBody SinglesTournament singlesTournament) {
+      @RequestBody TournamentRequestEntity t) {
 
-    try {
+    if (t.getType() == TournamentType.SINGLES) {
+      SinglesTournament tournament =
+          new SinglesTournament(
+              t.getId(),
+              t.getType(),
+              t.getStartDate(),
+              t.getEndDate(),
+              t.getGroupSize(),
+              t.getComment(),
+              t.getParticipatingPlayers());
+      try {
 
-      TournamentDTO savedOrUpdatedTournament =
-          TournamentDTOMapper.toTournamentDTO(
-              tournamentService.saveOrUpdateTournament(singlesTournament));
+        TournamentDTO savedOrUpdatedTournament =
+            TournamentDTOMapper.toTournamentDTO(
+                tournamentService.saveOrUpdateSinglesTournament(tournament));
+        return new ResponseEntity<>(savedOrUpdatedTournament, HttpStatus.OK);
+      } catch (Exception e) {
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    } else {
+      DoublesTournament tournament =
+          new DoublesTournament(
+              t.getId(),
+              t.getType(),
+              t.getStartDate(),
+              t.getEndDate(),
+              t.getGroupSize(),
+              t.getComment(),
+              t.getParticipatingTeams());
+      try {
 
-      return new ResponseEntity<>(savedOrUpdatedTournament, HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        TournamentDTO savedOrUpdatedTournament =
+            TournamentDTOMapper.toTournamentDTO(
+                tournamentService.saveOrUpdateDoublesTournament(tournament));
+        return new ResponseEntity<>(savedOrUpdatedTournament, HttpStatus.OK);
+      } catch (Exception e) {
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     }
   }
 

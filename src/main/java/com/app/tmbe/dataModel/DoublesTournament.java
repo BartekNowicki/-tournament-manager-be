@@ -19,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 // lombok does not deal well with inheritance, normal constructor implemented below
 // @AllArgsConstructor
-@Table(name = "singles_tournaments")
+@Table(name = "doubles_tournaments")
 public class DoublesTournament extends Tournament {
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
