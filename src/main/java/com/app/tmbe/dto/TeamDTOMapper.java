@@ -9,8 +9,8 @@ public class TeamDTOMapper {
     return new TeamDTO(
         team.getId(),
         team.getIsChecked(),
-        team.getFirstName(),
-        team.getLastName(),
+        team.getPlayerOneId(),
+        team.getPlayerTwoId(),
         team.getStrength(),
         team.getComment(),
         team.getPlayedDoublesTournaments());

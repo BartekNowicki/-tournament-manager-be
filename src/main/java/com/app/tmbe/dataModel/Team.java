@@ -33,11 +33,11 @@ public class Team {
   @Column(name = "isChecked")
   private Boolean isChecked;
 
-  @Column(name = "firstName")
-  private String firstName;
+  @Column(name = "playerOneId")
+  private long playerOneId;
 
-  @Column(name = "lastName")
-  private String lastName;
+  @Column(name = "playerTwoId")
+  private long playerTwoId;
 
   @Column(name = "strength")
   private int strength;
@@ -79,10 +79,10 @@ public class Team {
         + id
         + ", isChecked="
         + isChecked
-        + ", firstName="
-        + firstName
-        + ", lastName="
-        + lastName
+        + ", player1="
+        + playerOneId
+        + ", player2="
+        + playerTwoId
         + ", strength="
         + strength
         + ", comment="

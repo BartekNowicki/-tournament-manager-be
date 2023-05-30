@@ -11,13 +11,13 @@ import java.util.Set;
 public class TeamDTO {
   private long id;
   private boolean isChecked;
-  private String firstName;
-  private String lastName;
+  private long playerOneId;
+  private long playerTwoId;
   private int strength;
   private String comment;
   private Set<DoublesTournament> playedDoublesTournaments;
 
   public static TeamDTO badTeamDTO(String message) {
-    return new TeamDTO(0, false, null, null, 0, message, Set.of());
+    return new TeamDTO(0, false, -1, -1, 0, message, Set.of());
   }
 }
