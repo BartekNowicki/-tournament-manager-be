@@ -5,7 +5,7 @@ import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
 import com.app.tmbe.enumConverter.TournamentType;
 import com.app.tmbe.repository.PlayerRepository;
-import com.app.tmbe.repository.TournamentRepository;
+import com.app.tmbe.repository.SinglesTournamentRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,8 @@ class PlayerServiceTest {
 
   @InjectMocks PlayerService playerService;
   @Mock PlayerRepository playerRepository;
-  @Mock TournamentRepository tournamentRepository;
+  @Mock
+  SinglesTournamentRepository singlesTournamentRepository;
   private final List<Player> list = new ArrayList<>();
 
   @BeforeEach

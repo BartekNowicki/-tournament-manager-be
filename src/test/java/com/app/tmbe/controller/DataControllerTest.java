@@ -4,7 +4,7 @@ import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.enumConverter.TournamentType;
 import com.app.tmbe.repository.PlayerRepository;
-import com.app.tmbe.repository.TournamentRepository;
+import com.app.tmbe.repository.SinglesTournamentRepository;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +36,7 @@ public class DataControllerTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private PlayerRepository playerRepository;
-  @Autowired private TournamentRepository tournamentRepository;
+  @Autowired private SinglesTournamentRepository singlesTournamentRepository;
 
   Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of());
 
@@ -117,8 +117,8 @@ public class DataControllerTest {
     playerRepository.save(player1);
     playerRepository.save(player2);
     playerRepository.save(player3);
-    tournamentRepository.save(singlesTournament1);
-    tournamentRepository.save(singlesTournament2);
+    singlesTournamentRepository.save(singlesTournament1);
+    singlesTournamentRepository.save(singlesTournament2);
   }
 
   @Test

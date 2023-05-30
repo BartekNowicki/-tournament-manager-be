@@ -4,7 +4,7 @@ import com.app.tmbe.config.AppConfig;
 
 import com.app.tmbe.controller.DataController;
 import com.app.tmbe.repository.PlayerRepository;
-import com.app.tmbe.repository.TournamentRepository;
+import com.app.tmbe.repository.SinglesTournamentRepository;
 import com.app.tmbe.service.PlayerService;
 import com.app.tmbe.service.TournamentService;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class SpringBootContextIntegrationTest {
 
   @Autowired private PlayerRepository playerRepository;
 
-  @Autowired private TournamentRepository tournamentRepository;
+  @Autowired private SinglesTournamentRepository singlesTournamentRepository;
 
   @Autowired private PlayerService playerService;
 
@@ -36,7 +36,7 @@ public class SpringBootContextIntegrationTest {
 
   @Test
   public void whenContextLoads_thenTournamentRepositoryIsNotNull() {
-    assertThat(tournamentRepository).isNotNull();
+    assertThat(singlesTournamentRepository).isNotNull();
   }
 
   @Test

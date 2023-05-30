@@ -44,14 +44,14 @@ public class SpringBootJPA_H2_IntegrationTest {
           2L, TournamentType.DOUBLES, new Date(), new Date(), 6, "singlesTournament1 was awesome", Set.of(player1));
 
   @Autowired private PlayerRepository playerRepository;
-  @Autowired private TournamentRepository tournamentRepository;
+  @Autowired private SinglesTournamentRepository singlesTournamentRepository;
 
   @BeforeEach
   void setUp() {
     playerRepository.save(player1);
     playerRepository.save(player2);
-    tournamentRepository.save(singlesTournament1);
-    tournamentRepository.save(singlesTournament2);
+    singlesTournamentRepository.save(singlesTournament1);
+    singlesTournamentRepository.save(singlesTournament2);
   }
 
   @Test
@@ -59,8 +59,8 @@ public class SpringBootJPA_H2_IntegrationTest {
 
     Optional<Player> pl1 = playerRepository.findById(1L);
     Optional<Player> pl2 = playerRepository.findById(2L);
-    Optional<SinglesTournament> t1 = tournamentRepository.findById(1L);
-    Optional<SinglesTournament> t2 = tournamentRepository.findById(2L);
+    Optional<SinglesTournament> t1 = singlesTournamentRepository.findById(1L);
+    Optional<SinglesTournament> t2 = singlesTournamentRepository.findById(2L);
 
     assertNotNull(pl1);
     assertNotNull(pl2);
