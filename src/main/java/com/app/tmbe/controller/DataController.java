@@ -299,7 +299,7 @@ public class DataController {
     }
   }
 
-  @PostMapping("/tournaments")
+  @PostMapping("/tournaments/assignToSingles")
   public ResponseEntity<? extends TournamentDTO> assignPlayersToSinglesTournament(
       @RequestParam Long tournamentId) {
 
@@ -308,6 +308,22 @@ public class DataController {
       TournamentDTO savedOrUpdatedTournament =
           TournamentDTOMapper.toTournamentDTO(
               tournamentService.assignPlayersToSinglesTournament(tournamentId));
+
+      return new ResponseEntity<>(savedOrUpdatedTournament, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @PostMapping("/tournaments/assignToDoubles")
+  public ResponseEntity<? extends TournamentDTO> assignTeamsToDoublesTournament(
+          @RequestParam Long tournamentId) {
+
+    try {
+
+      TournamentDTO savedOrUpdatedTournament =
+              TournamentDTOMapper.toTournamentDTO(
+                      tournamentService.assignTeamsToDoublesTournament(tournamentId));
 
       return new ResponseEntity<>(savedOrUpdatedTournament, HttpStatus.OK);
     } catch (Exception e) {

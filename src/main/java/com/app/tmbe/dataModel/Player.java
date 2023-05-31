@@ -30,7 +30,7 @@ public class Player {
   @Column(name = "id")
   private long id;
 
-  @Column(name = "isChecked")
+  @Column(name = "is_checked")
   private Boolean isChecked;
 
   @Column(name = "firstName")
@@ -88,7 +88,7 @@ public class Player {
         + ", comment="
         + comment
         + '\''
-        + ", players="
+        + ", playedTournaments="
         + playedSinglesTournaments.size()
         + '}';
   }

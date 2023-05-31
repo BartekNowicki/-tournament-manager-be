@@ -23,6 +23,7 @@ public class TournamentService {
   @Autowired SinglesTournamentRepository singlesTournamentRepository;
   @Autowired DoublesTournamentRepository doublesTournamentRepository;
   @Autowired PlayerService playerService;
+  @Autowired TeamService teamService;
 
   public List<Tournament> getAllTournamentsOrderByIdAsc() {
     List<Tournament> tournaments = new ArrayList<>();
@@ -73,12 +74,30 @@ public class TournamentService {
     return doublesTournamentToBeDeleted;
   }
 
+  private void updatePlayersOnAddedOrUpdatedTournament(
+      Set<Player> players, SinglesTournament tournament) {
+    for (Player player : players) {
+      player.addSinglesTournament(tournament);
+      playerService.saveOrUpdatePlayer(player);
+    }
+  }
+
+  private void updateTeamsOnAddedOrUpdatedTournament(
+      Set<Team> teams, DoublesTournament tournament) {
+    for (Team team : teams) {
+      team.addDoublesTournament(tournament);
+      teamService.saveOrUpdateTeam(team);
+    }
+  }
+
   public SinglesTournament saveOrUpdateSinglesTournament(SinglesTournament singlesTournament) {
     Optional<SinglesTournament> tournamentToUpdate =
         singlesTournamentRepository.findById(singlesTournament.getId());
     if (tournamentToUpdate.isEmpty()) {
       SinglesTournament savedSinglesTournament =
           singlesTournamentRepository.save(singlesTournament);
+      updatePlayersOnAddedOrUpdatedTournament(
+          singlesTournament.getParticipatingPlayers(), savedSinglesTournament);
       return savedSinglesTournament;
     } else {
       SinglesTournament t = tournamentToUpdate.get();
@@ -88,7 +107,12 @@ public class TournamentService {
       t.setStartDate(singlesTournament.getStartDate());
       t.setGroupSize(singlesTournament.getGroupSize());
       t.setParticipatingPlayers(singlesTournament.getParticipatingPlayers());
-      return singlesTournamentRepository.save(t);
+
+      SinglesTournament savedSinglesTournament = singlesTournamentRepository.save(t);
+
+      updatePlayersOnAddedOrUpdatedTournament(
+          singlesTournament.getParticipatingPlayers(), savedSinglesTournament);
+      return savedSinglesTournament;
     }
   }
 
@@ -98,6 +122,8 @@ public class TournamentService {
     if (tournamentToUpdate.isEmpty()) {
       DoublesTournament savedDoublesTournament =
           doublesTournamentRepository.save(doublesTournament);
+      updateTeamsOnAddedOrUpdatedTournament(
+          doublesTournament.getParticipatingTeams(), savedDoublesTournament);
       return savedDoublesTournament;
     } else {
       DoublesTournament t = tournamentToUpdate.get();
@@ -107,7 +133,12 @@ public class TournamentService {
       t.setStartDate(doublesTournament.getStartDate());
       t.setGroupSize(doublesTournament.getGroupSize());
       t.setParticipatingTeams(doublesTournament.getParticipatingTeams());
-      return doublesTournamentRepository.save(t);
+
+      DoublesTournament savedDoublesTournament = doublesTournamentRepository.save(t);
+
+      updateTeamsOnAddedOrUpdatedTournament(
+          doublesTournament.getParticipatingTeams(), savedDoublesTournament);
+      return savedDoublesTournament;
     }
   }
 
@@ -118,26 +149,56 @@ public class TournamentService {
     if (tournamentToUpdate.isEmpty()) {
       throw new NoEntityFoundCustomException("No tournament with that id exists: " + tournamentId);
     } else {
-      SinglesTournament singlesTournamentToAssignAllCheckedPlayersTo = tournamentToUpdate.get();
-      Set<Player> playersRemovedFromTournament =
-          new HashSet<>(singlesTournamentToAssignAllCheckedPlayersTo.getParticipatingPlayers());
-      Set<Player> participatingPlayers = playerService.findAllByIsChecked(true);
-      playersRemovedFromTournament.removeAll(participatingPlayers);
-      participatingPlayers.remove(playerService.getPlayerById(-1L));
-      singlesTournamentToAssignAllCheckedPlayersTo.setParticipatingPlayers(participatingPlayers);
+      SinglesTournament tournamentToAssign = tournamentToUpdate.get();
 
-      for (Player player : singlesTournamentToAssignAllCheckedPlayersTo.getParticipatingPlayers()) {
-        player.addSinglesTournament(singlesTournamentToAssignAllCheckedPlayersTo);
+      Set<Player> included = playerService.findAllByIsChecked(true);
+      Set<Player> notIncluded = new HashSet<>(tournamentToAssign.getParticipatingPlayers());
+      notIncluded.removeAll(included);
+      included.remove(playerService.getPlayerById(-1L));
+      tournamentToAssign.setParticipatingPlayers(included);
+
+      for (Player player : tournamentToAssign.getParticipatingPlayers()) {
+        player.addSinglesTournament(tournamentToAssign);
       }
 
-      for (Player player : playersRemovedFromTournament) {
-        player.removeSinglesTournament(singlesTournamentToAssignAllCheckedPlayersTo);
+      for (Player player : notIncluded) {
+        player.removeSinglesTournament(tournamentToAssign);
       }
 
       SinglesTournament singlesTournamentWithAssignedPlayers =
-          saveOrUpdateSinglesTournament(singlesTournamentToAssignAllCheckedPlayersTo);
+          saveOrUpdateSinglesTournament(tournamentToAssign);
 
       return singlesTournamentWithAssignedPlayers;
+    }
+  }
+
+  public DoublesTournament assignTeamsToDoublesTournament(Long tournamentId)
+      throws NoEntityFoundCustomException {
+    Optional<DoublesTournament> tournamentToUpdate =
+        doublesTournamentRepository.findById(tournamentId);
+    if (tournamentToUpdate.isEmpty()) {
+      throw new NoEntityFoundCustomException("No tournament with that id exists: " + tournamentId);
+    } else {
+      DoublesTournament tournamentToAssign = tournamentToUpdate.get();
+
+      Set<Team> included = teamService.findAllByIsChecked(true);
+      Set<Team> notIncluded = new HashSet<>(tournamentToAssign.getParticipatingTeams());
+      notIncluded.removeAll(included);
+      included.remove(teamService.getTeamById(-1L));
+      tournamentToAssign.setParticipatingTeams(included);
+
+      for (Team team : tournamentToAssign.getParticipatingTeams()) {
+        team.addDoublesTournament(tournamentToAssign);
+      }
+
+      for (Team team : notIncluded) {
+        team.removeDoublesTournament(tournamentToAssign);
+      }
+
+      DoublesTournament doublesTournamentWithAssignedTeams =
+          saveOrUpdateDoublesTournament(tournamentToAssign);
+
+      return doublesTournamentWithAssignedTeams;
     }
   }
 }

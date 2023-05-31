@@ -5,6 +5,8 @@ import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.dataModel.Tournament;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 @Component
 public class TournamentDTOMapper {
   public static TournamentDTO toTournamentDTO(Tournament tournament) {
@@ -16,7 +18,9 @@ public class TournamentDTOMapper {
           tournament.getEndDate(),
           tournament.getGroupSize(),
           tournament.getComment(),
-          ((SinglesTournament) tournament).getParticipatingPlayers());
+          ((SinglesTournament) tournament).getParticipatingPlayers(),
+          Set.of());
+
     } else if (tournament instanceof DoublesTournament) {
       return new DoublesTournamentDTO(
           tournament.getId(),
@@ -25,6 +29,7 @@ public class TournamentDTOMapper {
           tournament.getEndDate(),
           tournament.getGroupSize(),
           tournament.getComment(),
+          Set.of(),
           ((DoublesTournament) tournament).getParticipatingTeams());
     }
     return TournamentDTO.badTournamentDTO("something went wrong in the tournament DTO mapper");

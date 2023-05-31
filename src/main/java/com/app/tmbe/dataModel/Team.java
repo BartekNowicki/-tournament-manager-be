@@ -30,7 +30,7 @@ public class Team {
   @Column(name = "id")
   private long id;
 
-  @Column(name = "isChecked")
+  @Column(name = "is_checked")
   private Boolean isChecked;
 
   @Column(name = "playerOneId")
@@ -62,7 +62,7 @@ public class Team {
       })
   private Set<DoublesTournament> playedDoublesTournaments = new HashSet<>();
 
-  private void addDoublesTournament(DoublesTournament doublesTournament) {
+  public void addDoublesTournament(DoublesTournament doublesTournament) {
     this.playedDoublesTournaments.add(doublesTournament);
     doublesTournament.getParticipatingTeams().add(this);
   }
@@ -88,7 +88,7 @@ public class Team {
         + ", comment="
         + comment
         + '\''
-        + ", players="
+        + ", playedTournaments="
         + playedDoublesTournaments.size()
         + '}';
   }

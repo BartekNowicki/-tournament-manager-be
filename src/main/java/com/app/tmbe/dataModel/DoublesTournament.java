@@ -39,9 +39,9 @@ public class DoublesTournament extends Tournament {
     this.participatingTeams = participatingTeams;
   }
 
-  public DoublesTournament(Set<Team> participatingTeams) {
-    this.participatingTeams = participatingTeams;
-  }
+//  public DoublesTournament(Set<Team> participatingTeams) {
+//    this.participatingTeams = participatingTeams;
+//  }
 
   public void addTeam(Team team) {
     this.participatingTeams.add(team);
@@ -70,7 +70,7 @@ public class DoublesTournament extends Tournament {
         + ", comment='"
         + super.getComment()
         + '\''
-        + ", players="
+        + ", teams="
         + participatingTeams.size()
         + '}';
   }

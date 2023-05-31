@@ -14,7 +14,6 @@ import java.util.Set;
 // lombok does not deal well with inheritance, normal constructor implemented below
 @Getter
 public class DoublesTournamentDTO extends TournamentDTO {
-  private Set<Team> participatingTeams;
 
   public DoublesTournamentDTO(
       long id,
@@ -23,11 +22,13 @@ public class DoublesTournamentDTO extends TournamentDTO {
       Date endDate,
       int groupSize,
       String comment,
+      Set<Player> participatingPlayers,
       Set<Team> participatingTeams) {
-    super(id, type, startDate, endDate, groupSize, comment);
+    super(
+        id, type, startDate, endDate, groupSize, comment, participatingPlayers, participatingTeams);
   }
 
   public static DoublesTournamentDTO badTournamentDTO(String message) {
-    return new DoublesTournamentDTO(0, null, null, null, 0, message, Set.of());
+    return new DoublesTournamentDTO(0, null, null, null, 0, message, Set.of(), Set.of());
   }
 }

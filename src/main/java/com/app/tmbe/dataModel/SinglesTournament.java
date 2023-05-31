@@ -39,9 +39,9 @@ public class SinglesTournament extends Tournament {
     this.participatingPlayers = participatingPlayers;
   }
 
-  public SinglesTournament(Set<Player> participatingPlayers) {
-    this.participatingPlayers = participatingPlayers;
-  }
+//  public SinglesTournament(Set<Player> participatingPlayers) {
+//    this.participatingPlayers = participatingPlayers;
+//  }
 
   public void addPlayer(Player player) {
     this.participatingPlayers.add(player);

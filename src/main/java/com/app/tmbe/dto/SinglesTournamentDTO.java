@@ -1,6 +1,7 @@
 package com.app.tmbe.dto;
 
 import com.app.tmbe.dataModel.Player;
+import com.app.tmbe.dataModel.Team;
 import com.app.tmbe.enumConverter.TournamentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +14,6 @@ import java.util.Set;
 @Getter
 public class SinglesTournamentDTO extends TournamentDTO {
 
-  private Set<Player> participatingPlayers;
-
   public SinglesTournamentDTO(
       long id,
       TournamentType type,
@@ -22,11 +21,13 @@ public class SinglesTournamentDTO extends TournamentDTO {
       Date endDate,
       int groupSize,
       String comment,
-      Set<Player> participatingPlayers) {
-    super(id, type, startDate, endDate, groupSize, comment);
+      Set<Player> participatingPlayers,
+      Set<Team> participatingTeams) {
+    super(
+        id, type, startDate, endDate, groupSize, comment, participatingPlayers, participatingTeams);
   }
 
   public static SinglesTournamentDTO badTournamentDTO(String message) {
-    return new SinglesTournamentDTO(0, null, null, null, 0, message, Set.of());
+    return new SinglesTournamentDTO(0, null, null, null, 0, message, Set.of(), Set.of());
   }
 }

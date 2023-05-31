@@ -52,8 +52,8 @@ public class TeamService {
       Set<DoublesTournament> totalTournamentsPlayed =
           new HashSet<>(team.getPlayedDoublesTournaments());
       totalTournamentsPlayed.addAll(t.getPlayedDoublesTournaments());
-//      t.setFirstName(team.getFirstName());
-//      t.setLastName(team.getLastName());
+      t.setPlayerOneId(team.getPlayerOneId());
+      t.setPlayerTwoId(team.getPlayerTwoId());
       t.setComment(team.getComment());
       t.setIsChecked(team.getIsChecked());
       t.setStrength(team.getStrength());
