@@ -4,18 +4,26 @@ import com.app.tmbe.dataModel.Team;
 import com.app.tmbe.dataModel.DoublesTournament;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
 import com.app.tmbe.repository.TeamRepository;
+import com.app.tmbe.utils.GrouperInterface;
+import com.app.tmbe.utils.TeamGrouper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
   @Autowired TeamRepository teamRepository;
+
+  public List<Team> getAllTeams() {
+    return teamRepository.findAll();
+  }
 
   public List<Team> getAllTeamsOrderByIdAsc() {
     return teamRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
@@ -64,5 +72,11 @@ public class TeamService {
 
   public Set<Team> findAllByIsChecked(boolean b) {
     return teamRepository.findByIsChecked(true);
+  }
+
+  public Map<Integer, Set<Team>> groupTeams(int groupSize) {
+    Set<Team> teams = getAllTeams().stream().collect(Collectors.toSet());
+    GrouperInterface teamGrouper = new TeamGrouper(teams, groupSize);
+    return teamGrouper.groupTeams();
   }
 }

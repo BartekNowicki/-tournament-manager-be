@@ -5,19 +5,26 @@ import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
 import com.app.tmbe.repository.PlayerRepository;
 
+import com.app.tmbe.utils.GrouperInterface;
+import com.app.tmbe.utils.PlayerGrouper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerService {
-  @Autowired
-  PlayerRepository playerRepository;
+  @Autowired PlayerRepository playerRepository;
+
+  public List<Player> getAllPlayers() {
+    return playerRepository.findAll();
+  }
 
   public List<Player> getAllPlayersOrderByIdAsc() {
     return playerRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
@@ -34,7 +41,8 @@ public class PlayerService {
     }
     Player playerToBeDeleted = playerToDelete.get();
     // need a new hashset to avoid the concurrent modification exception
-    for (SinglesTournament singlesTournament : new HashSet<>(playerToBeDeleted.getPlayedSinglesTournaments())) {
+    for (SinglesTournament singlesTournament :
+        new HashSet<>(playerToBeDeleted.getPlayedSinglesTournaments())) {
       playerToBeDeleted.removeSinglesTournament(singlesTournament);
     }
     playerRepository.delete(playerToBeDeleted);
@@ -50,7 +58,8 @@ public class PlayerService {
       return playerRepository.save(player);
     } else {
       Player p = playerToUpdate.get();
-      Set<SinglesTournament> totalTournamentsPlayed = new HashSet<>(player.getPlayedSinglesTournaments());
+      Set<SinglesTournament> totalTournamentsPlayed =
+          new HashSet<>(player.getPlayedSinglesTournaments());
       totalTournamentsPlayed.addAll(p.getPlayedSinglesTournaments());
       p.setFirstName(player.getFirstName());
       p.setLastName(player.getLastName());
@@ -64,5 +73,11 @@ public class PlayerService {
 
   public Set<Player> findAllByIsChecked(boolean b) {
     return playerRepository.findByIsChecked(true);
+  }
+
+  public Map<Integer, Set<Player>> groupPlayers(int groupSize) {
+    Set<Player> players = getAllPlayers().stream().collect(Collectors.toSet());
+    GrouperInterface playerGrouper = new PlayerGrouper(players, groupSize);
+    return playerGrouper.groupPlayers();
   }
 }
