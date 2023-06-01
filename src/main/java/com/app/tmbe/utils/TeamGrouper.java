@@ -24,7 +24,7 @@ public class TeamGrouper implements GrouperInterface {
     List<Team> teamsToGroup = new ArrayList<>(teams);
     Collections.shuffle(new ArrayList<>(teamsToGroup)); // this is done in place, returns void
     int groupCount = teams.size() / groupSize;
-    if (isLastGroupNotFull(groupCount)) {
+    if (isLastGroupNotFull()) {
       groupCount++;
     }
 
@@ -39,7 +39,7 @@ public class TeamGrouper implements GrouperInterface {
     return groups;
   }
 
-  private boolean isLastGroupNotFull(int groupCount) {
+  private boolean isLastGroupNotFull() {
     return teams.size() % groupSize > 1;
   }
 

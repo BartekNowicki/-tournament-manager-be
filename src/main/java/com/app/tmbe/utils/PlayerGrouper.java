@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class PlayerGrouper implements GrouperInterface {
   Set<Player> players;
@@ -25,7 +24,7 @@ public class PlayerGrouper implements GrouperInterface {
     List<Player> playersToGroup = new ArrayList<>(players);
     Collections.shuffle(new ArrayList<>(playersToGroup)); // this is done in place, returns void
     int groupCount = players.size() / groupSize;
-    if (isLastGroupNotFull(groupCount)) {
+    if (isLastGroupNotFull()) {
       groupCount++;
     }
 
@@ -41,7 +40,7 @@ public class PlayerGrouper implements GrouperInterface {
     return groups;
   }
 
-  private boolean isLastGroupNotFull(int groupCount) {
+  private boolean isLastGroupNotFull() {
     return players.size() % groupSize > 1;
   }
 
