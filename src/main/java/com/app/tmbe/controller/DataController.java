@@ -21,13 +21,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// @CrossOrigin(origins = "http://localhost:5173")
 @CrossOrigin(origins = "http://localhost:5174")
 @Controller
 @RequestMapping("/api/data")
@@ -298,6 +299,36 @@ public class DataController {
       TeamDTO savedOrUpdatedTeam = TeamDTOMapper.toTeamDTO(teamService.saveOrUpdateTeam(team));
 
       return new ResponseEntity<>(savedOrUpdatedTeam, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @PatchMapping("/teams")
+  public ResponseEntity<Map<Long, Boolean>> checkTeams(
+      @RequestBody Map<Long, Boolean> idToCheckStatusMapping) {
+
+    try {
+
+      Map<Long, Boolean> updatedTeamStatusByIdMapping =
+          teamService.checkTeams(idToCheckStatusMapping);
+
+      return new ResponseEntity<>(updatedTeamStatusByIdMapping, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @PatchMapping("/players")
+  public ResponseEntity<Map<Long, Boolean>> checkPlayers(
+      @RequestBody Map<Long, Boolean> idToCheckStatusMapping) {
+
+    try {
+
+      Map<Long, Boolean> updatedPlayerStatusByIdMapping =
+          playerService.checkPlayers(idToCheckStatusMapping);
+
+      return new ResponseEntity<>(updatedPlayerStatusByIdMapping, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }

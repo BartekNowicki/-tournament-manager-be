@@ -6,10 +6,12 @@ import com.app.tmbe.exception.NoEntityFoundCustomException;
 import com.app.tmbe.repository.TeamRepository;
 import com.app.tmbe.utils.GrouperInterface;
 import com.app.tmbe.utils.TeamGrouper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -78,5 +80,28 @@ public class TeamService {
     Set<Team> teams = getAllTeams().stream().collect(Collectors.toSet());
     GrouperInterface teamGrouper = new TeamGrouper(teams, groupSize);
     return teamGrouper.groupTeams();
+  }
+
+  public Map<Long, Boolean> checkTeams(Map<Long, Boolean> idToCheckStatusMapping) throws Exception {
+
+    Map<Long, Boolean> outcome = new HashMap<>();
+
+    for (Long id : idToCheckStatusMapping.keySet()) {
+      try {
+        Team team =
+            teamRepository
+                .findById(id)
+                .orElseThrow(
+                    () -> new Exception("Batch check failed, team not found by id: " + id));
+        team.setIsChecked(idToCheckStatusMapping.get(id));
+        Team updatedTeam = teamRepository.save(team);
+        outcome.put(updatedTeam.getId(), updatedTeam.getIsChecked());
+
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new Exception("Rethrowing: Batch check failed, team not found by id: " + id);
+      }
+    }
+    return outcome;
   }
 }

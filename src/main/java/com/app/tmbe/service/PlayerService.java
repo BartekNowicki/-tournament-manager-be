@@ -2,6 +2,7 @@ package com.app.tmbe.service;
 
 import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.dataModel.SinglesTournament;
+import com.app.tmbe.dataModel.Team;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
 import com.app.tmbe.repository.PlayerRepository;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -79,5 +81,29 @@ public class PlayerService {
     Set<Player> players = getAllPlayers().stream().collect(Collectors.toSet());
     GrouperInterface playerGrouper = new PlayerGrouper(players, groupSize);
     return playerGrouper.groupPlayers();
+  }
+
+  public Map<Long, Boolean> checkPlayers(Map<Long, Boolean> idToCheckStatusMapping)
+      throws Exception {
+
+    Map<Long, Boolean> outcome = new HashMap<>();
+
+    for (Long id : idToCheckStatusMapping.keySet()) {
+      try {
+        Player player =
+            playerRepository
+                .findById(id)
+                .orElseThrow(
+                    () -> new Exception("Batch check failed, player not found by id: " + id));
+        player.setIsChecked(idToCheckStatusMapping.get(id));
+        Player updatedPlayer = playerRepository.save(player);
+        outcome.put(updatedPlayer.getId(), updatedPlayer.getIsChecked());
+
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new Exception("Rethrowing: Batch check failed, player not found by id: " + id);
+      }
+    }
+    return outcome;
   }
 }
