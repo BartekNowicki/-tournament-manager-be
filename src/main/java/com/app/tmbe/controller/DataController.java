@@ -21,8 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -380,7 +378,8 @@ public class DataController {
     }
   }
 
-  @PostMapping("/tournaments/assignToSingles")
+//  @PostMapping("/tournaments/assignToSingles")
+@GetMapping("/tournaments/assignToSingles")
   public ResponseEntity<? extends TournamentDTO> assignPlayersToSinglesTournament(
       @RequestParam Long tournamentId) {
 
@@ -396,7 +395,8 @@ public class DataController {
     }
   }
 
-  @PostMapping("/tournaments/assignToDoubles")
+//  @PostMapping("/tournaments/assignToDoubles")
+@GetMapping("/tournaments/assignToDoubles")
   public ResponseEntity<? extends TournamentDTO> assignTeamsToDoublesTournament(
       @RequestParam Long tournamentId) {
 

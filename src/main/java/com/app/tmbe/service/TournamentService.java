@@ -110,8 +110,6 @@ public class TournamentService {
 
       SinglesTournament savedSinglesTournament = singlesTournamentRepository.save(t);
 
-      updatePlayersOnAddedOrUpdatedTournament(
-          singlesTournament.getParticipatingPlayers(), savedSinglesTournament);
       return savedSinglesTournament;
     }
   }
@@ -136,8 +134,6 @@ public class TournamentService {
 
       DoublesTournament savedDoublesTournament = doublesTournamentRepository.save(t);
 
-      updateTeamsOnAddedOrUpdatedTournament(
-          doublesTournament.getParticipatingTeams(), savedDoublesTournament);
       return savedDoublesTournament;
     }
   }
@@ -151,10 +147,10 @@ public class TournamentService {
     } else {
       SinglesTournament tournamentToAssign = tournamentToUpdate.get();
 
-      Set<Player> included = playerService.findAllByIsChecked(true);
+      Set<Player> included = new HashSet<>(playerService.findAllByIsChecked(true));
       Set<Player> notIncluded = new HashSet<>(tournamentToAssign.getParticipatingPlayers());
       notIncluded.removeAll(included);
-      included.remove(playerService.getPlayerById(-1L));
+//      included.remove(playerService.getPlayerById(-1L));
       tournamentToAssign.setParticipatingPlayers(included);
 
       for (Player player : tournamentToAssign.getParticipatingPlayers()) {
