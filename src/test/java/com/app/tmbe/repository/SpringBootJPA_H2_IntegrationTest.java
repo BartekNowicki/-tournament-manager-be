@@ -25,10 +25,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = Application.class)
 public class SpringBootJPA_H2_IntegrationTest {
 
-  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of());
+  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of(), Set.of());
 
   Player player2 =
-      new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of());
+      new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of(), Set.of());
 
   SinglesTournament singlesTournament1 =
       new SinglesTournament(

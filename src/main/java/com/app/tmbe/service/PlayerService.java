@@ -1,9 +1,11 @@
 package com.app.tmbe.service;
 
+import com.app.tmbe.dataModel.GroupInSingles;
 import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.dataModel.Team;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
+import com.app.tmbe.repository.GroupRepository;
 import com.app.tmbe.repository.PlayerRepository;
 
 import com.app.tmbe.utils.GrouperInterface;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class PlayerService {
   @Autowired PlayerRepository playerRepository;
+  @Autowired GroupRepository groupRepository;
 
   public List<Player> getAllPlayers() {
     return playerRepository.findAll();
@@ -78,9 +81,38 @@ public class PlayerService {
   }
 
   public Map<Integer, Set<Player>> groupPlayers(int groupSize) {
-    Set<Player> players = getAllPlayers().stream().filter(p -> p.getId() != -1).collect(Collectors.toSet());
+
+    // TODO: do not tak all the players out there, only those assigned to the tournament
+    Set<Player> players =
+        getAllPlayers().stream().filter(p -> p.getId() != -1).collect(Collectors.toSet());
+
     GrouperInterface playerGrouper = new PlayerGrouper(players, groupSize);
-    return playerGrouper.groupPlayers();
+
+    Map<Integer, Set<Player>> groups = playerGrouper.groupPlayers();
+
+    ////////////////////////////////////
+
+    System.out.println("----------------------------------------------------");
+
+    groups.entrySet().forEach(entry -> {
+              GroupInSingles dummy = new GroupInSingles(entry.getKey(), entry.getValue());
+              GroupInSingles newGroup = groupRepository.save(dummy);
+              for (Player p : new HashSet<>(newGroup.getMembers())) {
+                p.joinGroup(newGroup);
+                playerRepository.save(p); // NO, DO THIS THROUGH SERVICE IN CASE IT ALREADY EXISTS
+              }
+            }
+    );
+
+    System.out.println("----------------------------------------------------");
+
+    // tournament add groups
+    // run all through DTOs
+    // repeat for teams
+
+    ///////////////////////////////////
+
+    return groups;
   }
 
   public Map<Long, Boolean> checkPlayers(Map<Long, Boolean> idToCheckStatusMapping)

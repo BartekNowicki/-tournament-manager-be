@@ -48,8 +48,7 @@ public class Player {
   // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
   // The ownership of the relation is determined by the mappedBy attribute. The entity that isn’t
   // the owner will have the mappedBy attribute => Player is the owning parent, SinglesTournament is
-  // the
-  // referencing side
+  // the referencing side
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
@@ -62,6 +61,22 @@ public class Player {
       })
   private Set<SinglesTournament> playedSinglesTournaments = new HashSet<>();
 
+  // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
+  // The ownership of the relation is determined by the mappedBy attribute. The entity that isn’t
+  // the owner will have the mappedBy attribute => Player is the owning parent, SinglesTournament is
+  // the referencing side
+
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @JoinTable(
+      name = "player_group_in_singles",
+      joinColumns = {
+        @JoinColumn(name = "player_id", referencedColumnName = "id"),
+      },
+      inverseJoinColumns = {
+        @JoinColumn(name = "group_in_singles_id", referencedColumnName = "id"),
+      })
+  private Set<GroupInSingles> belongsToSinglesGroups = new HashSet<>();
+
   public void addSinglesTournament(SinglesTournament singlesTournament) {
     this.playedSinglesTournaments.add(singlesTournament);
     singlesTournament.getParticipatingPlayers().add(this);
@@ -72,6 +87,15 @@ public class Player {
     singlesTournament.getParticipatingPlayers().remove(this);
   }
 
+  public void joinGroup(GroupInSingles group) {
+    this.belongsToSinglesGroups.add(group);
+  }
+
+  public void leaveGroup(GroupInSingles group) {
+    this.belongsToSinglesGroups.remove(group);
+    //group.getMembers().remove(this);
+  }
+
   @Override
   public String toString() {
     return "Player{"
@@ -79,17 +103,21 @@ public class Player {
         + id
         + ", isChecked="
         + isChecked
-        + ", firstName="
+        + ", firstName='"
         + firstName
-        + ", lastName="
+        + '\''
+        + ", lastName='"
         + lastName
+        + '\''
         + ", strength="
         + strength
-        + ", comment="
+        + ", comment='"
         + comment
         + '\''
-        + ", playedTournaments="
+        + ", playedSinglesTournaments="
         + playedSinglesTournaments.size()
+        + ", singlesGroups="
+        + belongsToSinglesGroups.size()
         + '}';
   }
 }

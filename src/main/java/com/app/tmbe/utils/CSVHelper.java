@@ -51,6 +51,7 @@ public class CSVHelper {
                 csvRecord.get("lastName"),
                 Integer.parseInt(csvRecord.get("strength")),
                 csvRecord.get("comment"),
+                null,
                 null);
 
         players.add(player);

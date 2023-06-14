@@ -4,6 +4,7 @@ import com.app.tmbe.enumConverter.TournamentType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,10 @@ public class SinglesTournament extends Tournament {
   @JsonBackReference
   @ManyToMany(mappedBy = "playedSinglesTournaments")
   private Set<Player> participatingPlayers = new HashSet<>();
+
+  // Bidirectional @OneToMany, two parents, no children, one owner (GroupInSingles)
+  @OneToMany(mappedBy="partOfSinglesTournament")
+  private Set<GroupInSingles> groups;
 
   public SinglesTournament(
       long id,
@@ -51,23 +56,9 @@ public class SinglesTournament extends Tournament {
 
   @Override
   public String toString() {
-    return "SinglesTournament{"
-        + "id="
-        + super.getId()
-        + ", type='"
-        + super.getType()
-        + '\''
-        + ", startDate="
-        + super.getStartDate()
-        + ", endDate="
-        + super.getEndDate()
-        + ", groupSize="
-        + super.getGroupSize()
-        + ", comment='"
-        + super.getComment()
-        + '\''
-        + ", players="
-        + participatingPlayers.size()
-        + '}';
+    return "SinglesTournament{" +
+            "participatingPlayers=" + participatingPlayers.size() +
+            ", groups=" + groups.size() +
+            '}';
   }
 }

@@ -40,10 +40,10 @@ class PlayerServiceTest {
   void setUp() {
 
     Player player1 =
-        new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", new HashSet<>());
+        new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", new HashSet<>(), new HashSet<>());
     Player player2 =
-        new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", new HashSet<>());
-    Player player3 = new Player(3L, false, "Moe", "Broe", 9, "Moe cannot play", new HashSet<>());
+        new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", new HashSet<>(), new HashSet<>());
+    Player player3 = new Player(3L, false, "Moe", "Broe", 9, "Moe cannot play", new HashSet<>(), new HashSet<>());
 
     list.add(player2);
     list.add(player3);
@@ -92,7 +92,7 @@ class PlayerServiceTest {
   void deletePlayerById_success() throws NoEntityFoundCustomException {
     // given
     Player player =
-        new Player(10L, true, "Joe", "Doe", 10, "Joe Doe is a great player", new HashSet<>());
+        new Player(10L, true, "Joe", "Doe", 10, "Joe Doe is a great player", new HashSet<>(), new HashSet<>());
     SinglesTournament singlesTournament =
         new SinglesTournament(
             20L,

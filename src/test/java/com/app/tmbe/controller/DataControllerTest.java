@@ -38,12 +38,12 @@ public class DataControllerTest {
   @Autowired private PlayerRepository playerRepository;
   @Autowired private SinglesTournamentRepository singlesTournamentRepository;
 
-  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of());
+  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of(), Set.of());
 
   Player player2 =
-      new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of());
+      new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of(), Set.of());
 
-  Player player3 = new Player(3L, true, "Moe", "Broe", 9, "Moe cannot play", Set.of());
+  Player player3 = new Player(3L, true, "Moe", "Broe", 9, "Moe cannot play", Set.of(), Set.of());
 
 
   public DataControllerTest() throws JSONException {}

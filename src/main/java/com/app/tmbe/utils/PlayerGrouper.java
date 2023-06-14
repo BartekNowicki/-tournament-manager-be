@@ -36,7 +36,6 @@ public class PlayerGrouper implements GrouperInterface {
               playersToGroup.subList(
                   groupSize * (i - 1), Math.min(groupSize * i, players.size()))));
     }
-
     return groups;
   }
 
