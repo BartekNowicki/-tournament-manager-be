@@ -40,7 +40,7 @@ public class TeamGrouper implements GrouperInterface {
   }
 
   private boolean isLastGroupNotFull() {
-    return teams.size() % groupSize > 1;
+    return teams.size() % groupSize > 0;
   }
 
   @Override

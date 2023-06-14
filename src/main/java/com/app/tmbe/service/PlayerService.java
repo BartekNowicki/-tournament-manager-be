@@ -78,7 +78,7 @@ public class PlayerService {
   }
 
   public Map<Integer, Set<Player>> groupPlayers(int groupSize) {
-    Set<Player> players = getAllPlayers().stream().collect(Collectors.toSet());
+    Set<Player> players = getAllPlayers().stream().filter(p -> p.getId() != -1).collect(Collectors.toSet());
     GrouperInterface playerGrouper = new PlayerGrouper(players, groupSize);
     return playerGrouper.groupPlayers();
   }

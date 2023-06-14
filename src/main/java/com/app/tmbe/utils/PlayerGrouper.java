@@ -41,7 +41,7 @@ public class PlayerGrouper implements GrouperInterface {
   }
 
   private boolean isLastGroupNotFull() {
-    return players.size() % groupSize > 1;
+    return players.size() % groupSize > 0;
   }
 
   @Override
