@@ -29,7 +29,7 @@ public class SinglesTournament extends Tournament {
   private Set<Player> participatingPlayers = new HashSet<>();
 
   // Bidirectional @OneToMany, two parents, no children, one owner (GroupInSingles)
-  @OneToMany(mappedBy="partOfSinglesTournament")
+  @OneToMany(mappedBy = "partOfSinglesTournament")
   private Set<GroupInSingles> groups;
 
   public SinglesTournament(
@@ -56,9 +56,12 @@ public class SinglesTournament extends Tournament {
 
   @Override
   public String toString() {
-    return "SinglesTournament{" +
-            "participatingPlayers=" + participatingPlayers.size() +
-            ", groups=" + groups.size() +
-            '}';
+    return "SinglesTournament{"
+        + "participatingPlayers="
+        + participatingPlayers.size()
+        + ", groups="
+        + groups.size()
+        + "} "
+        + super.toString();
   }
 }

@@ -19,7 +19,8 @@ public class TournamentDTOMapper {
           tournament.getGroupSize(),
           tournament.getComment(),
           ((SinglesTournament) tournament).getParticipatingPlayers(),
-          Set.of());
+          Set.of(),
+          ((SinglesTournament) tournament).getGroups());
 
     } else if (tournament instanceof DoublesTournament) {
       return new DoublesTournamentDTO(
@@ -30,7 +31,8 @@ public class TournamentDTOMapper {
           tournament.getGroupSize(),
           tournament.getComment(),
           Set.of(),
-          ((DoublesTournament) tournament).getParticipatingTeams());
+          ((DoublesTournament) tournament).getParticipatingTeams(),
+          ((DoublesTournament) tournament).getGroups());
     }
     return TournamentDTO.badTournamentDTO("something went wrong in the tournament DTO mapper");
   }

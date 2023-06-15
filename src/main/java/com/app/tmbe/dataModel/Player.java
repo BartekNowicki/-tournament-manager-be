@@ -93,7 +93,6 @@ public class Player {
 
   public void leaveGroup(GroupInSingles group) {
     this.belongsToSinglesGroups.remove(group);
-    //group.getMembers().remove(this);
   }
 
   @Override

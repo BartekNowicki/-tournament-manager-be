@@ -3,11 +3,11 @@ package com.app.tmbe.service;
 import com.app.tmbe.dataModel.GroupInSingles;
 import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.dataModel.SinglesTournament;
-import com.app.tmbe.dataModel.Team;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
-import com.app.tmbe.repository.GroupRepository;
+import com.app.tmbe.repository.GroupInSinglesRepository;
 import com.app.tmbe.repository.PlayerRepository;
 
+import com.app.tmbe.repository.SinglesTournamentRepository;
 import com.app.tmbe.utils.GrouperInterface;
 import com.app.tmbe.utils.PlayerGrouper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class PlayerService {
   @Autowired PlayerRepository playerRepository;
-  @Autowired GroupRepository groupRepository;
+  @Autowired SinglesTournamentRepository singlesTournamentRepository;
+  @Autowired
+  GroupInSinglesRepository groupInSinglesRepository;
 
   public List<Player> getAllPlayers() {
     return playerRepository.findAll();
@@ -49,6 +50,10 @@ public class PlayerService {
     for (SinglesTournament singlesTournament :
         new HashSet<>(playerToBeDeleted.getPlayedSinglesTournaments())) {
       playerToBeDeleted.removeSinglesTournament(singlesTournament);
+    }
+    for (GroupInSingles groupInSingles :
+        new HashSet<>(playerToBeDeleted.getBelongsToSinglesGroups())) {
+      playerToBeDeleted.leaveGroup(groupInSingles);
     }
     playerRepository.delete(playerToBeDeleted);
     return playerToBeDeleted;
@@ -80,38 +85,34 @@ public class PlayerService {
     return playerRepository.findByIsChecked(true);
   }
 
-  public Map<Integer, Set<Player>> groupPlayers(int groupSize) {
+  public Map<Integer, Set<Player>> groupPlayers(long singlesTournamentId) {
+    // using the repo instead of the service to avoid the prohibited circular dependency
+    // playerService <-> tournamentService
 
-    // TODO: do not tak all the players out there, only those assigned to the tournament
-    Set<Player> players =
-        getAllPlayers().stream().filter(p -> p.getId() != -1).collect(Collectors.toSet());
+    SinglesTournament tournament =
+        singlesTournamentRepository
+            .findById(singlesTournamentId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid singles tournamentId"));
 
+    int groupSize = tournament.getGroupSize();
+    Set<Player> players = tournament.getParticipatingPlayers();
     GrouperInterface playerGrouper = new PlayerGrouper(players, groupSize);
-
     Map<Integer, Set<Player>> groups = playerGrouper.groupPlayers();
 
-    ////////////////////////////////////
-
-    System.out.println("----------------------------------------------------");
-
-    groups.entrySet().forEach(entry -> {
-              GroupInSingles dummy = new GroupInSingles(entry.getKey(), entry.getValue());
-              GroupInSingles newGroup = groupRepository.save(dummy);
+    groups
+        .entrySet()
+        .forEach(
+            entry -> {
+              // this is a dummy in the sense that entry.getKey() will get reassigned by the db as
+              // autoincremented id
+              GroupInSingles dummy =
+                  new GroupInSingles(entry.getKey(), entry.getValue(), tournament);
+              GroupInSingles newGroup = groupInSinglesRepository.save(dummy);
               for (Player p : new HashSet<>(newGroup.getMembers())) {
                 p.joinGroup(newGroup);
-                playerRepository.save(p); // NO, DO THIS THROUGH SERVICE IN CASE IT ALREADY EXISTS
+                saveOrUpdatePlayer(p);
               }
-            }
-    );
-
-    System.out.println("----------------------------------------------------");
-
-    // tournament add groups
-    // run all through DTOs
-    // repeat for teams
-
-    ///////////////////////////////////
-
+            });
     return groups;
   }
 

@@ -62,6 +62,17 @@ public class Team {
       })
   private Set<DoublesTournament> playedDoublesTournaments = new HashSet<>();
 
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @JoinTable(
+      name = "team_group_in_doubles",
+      joinColumns = {
+        @JoinColumn(name = "team_id", referencedColumnName = "id"),
+      },
+      inverseJoinColumns = {
+        @JoinColumn(name = "group_in_doubles_id", referencedColumnName = "id"),
+      })
+  private Set<GroupInDoubles> belongsToDoublesGroups = new HashSet<>();
+
   public void addDoublesTournament(DoublesTournament doublesTournament) {
     this.playedDoublesTournaments.add(doublesTournament);
     doublesTournament.getParticipatingTeams().add(this);
@@ -72,6 +83,14 @@ public class Team {
     doublesTournament.getParticipatingTeams().remove(this);
   }
 
+  public void joinGroup(GroupInDoubles group) {
+    this.belongsToDoublesGroups.add(group);
+  }
+
+  public void leaveGroup(GroupInDoubles group) {
+    this.belongsToDoublesGroups.remove(group);
+  }
+
   @Override
   public String toString() {
     return "Team{"
@@ -79,17 +98,19 @@ public class Team {
         + id
         + ", isChecked="
         + isChecked
-        + ", player1="
+        + ", playerOneId="
         + playerOneId
-        + ", player2="
+        + ", playerTwoId="
         + playerTwoId
         + ", strength="
         + strength
-        + ", comment="
+        + ", comment='"
         + comment
         + '\''
-        + ", playedTournaments="
+        + ", playedDoublesTournaments="
         + playedDoublesTournaments.size()
+        + ", belongsToDoublesGroups="
+        + belongsToDoublesGroups.size()
         + '}';
   }
 }

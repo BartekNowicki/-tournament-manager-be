@@ -4,6 +4,7 @@ import com.app.tmbe.enumConverter.TournamentType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,10 @@ public class DoublesTournament extends Tournament {
   @ManyToMany(mappedBy = "playedDoublesTournaments")
   private Set<Team> participatingTeams = new HashSet<>();
 
+  // Bidirectional @OneToMany, two parents, no children, one owner (GroupInDoubles)
+  @OneToMany(mappedBy="partOfDoublesTournament")
+  private Set<GroupInDoubles> groups;
+
   public DoublesTournament(
       long id,
       TournamentType type,
@@ -39,10 +44,6 @@ public class DoublesTournament extends Tournament {
     this.participatingTeams = participatingTeams;
   }
 
-//  public DoublesTournament(Set<Team> participatingTeams) {
-//    this.participatingTeams = participatingTeams;
-//  }
-
   public void addTeam(Team team) {
     this.participatingTeams.add(team);
     team.getPlayedDoublesTournaments().add(this);
@@ -53,25 +54,12 @@ public class DoublesTournament extends Tournament {
     team.getPlayedDoublesTournaments().remove(this);
   }
 
+
   @Override
   public String toString() {
-    return "DoublesTournament{"
-        + "id="
-        + super.getId()
-        + ", type='"
-        + super.getType()
-        + '\''
-        + ", startDate="
-        + super.getStartDate()
-        + ", endDate="
-        + super.getEndDate()
-        + ", groupSize="
-        + super.getGroupSize()
-        + ", comment='"
-        + super.getComment()
-        + '\''
-        + ", teams="
-        + participatingTeams.size()
-        + '}';
+    return "DoublesTournament{" +
+            "participatingTeams=" + participatingTeams.size() +
+            ", groups=" + groups.size() +
+            "} " + super.toString();
   }
 }

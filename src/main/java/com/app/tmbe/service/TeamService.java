@@ -1,10 +1,18 @@
 package com.app.tmbe.service;
 
+import com.app.tmbe.dataModel.GroupInDoubles;
+import com.app.tmbe.dataModel.GroupInSingles;
+import com.app.tmbe.dataModel.Player;
+import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.dataModel.Team;
 import com.app.tmbe.dataModel.DoublesTournament;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
+import com.app.tmbe.repository.DoublesTournamentRepository;
+import com.app.tmbe.repository.GroupInDoublesRepository;
+import com.app.tmbe.repository.GroupInSinglesRepository;
 import com.app.tmbe.repository.TeamRepository;
 import com.app.tmbe.utils.GrouperInterface;
+import com.app.tmbe.utils.PlayerGrouper;
 import com.app.tmbe.utils.TeamGrouper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +30,8 @@ import java.util.stream.Collectors;
 @Service
 public class TeamService {
   @Autowired TeamRepository teamRepository;
+  @Autowired DoublesTournamentRepository doublesTournamentRepository;
+  @Autowired GroupInDoublesRepository groupInDoublesRepository;
 
   public List<Team> getAllTeams() {
     return teamRepository.findAll();
@@ -76,10 +86,35 @@ public class TeamService {
     return teamRepository.findByIsChecked(true);
   }
 
-  public Map<Integer, Set<Team>> groupTeams(int groupSize) {
-    Set<Team> teams = getAllTeams().stream().collect(Collectors.toSet());
+  public Map<Integer, Set<Team>> groupTeams(long doublesTournamentId) {
+    // using the repo instead of the service to avoid the prohibited circular dependency
+    // playerService <-> tournamentService
+
+    DoublesTournament tournament =
+        doublesTournamentRepository
+            .findById(doublesTournamentId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid doubles tournamentId"));
+
+    int groupSize = tournament.getGroupSize();
+    Set<Team> teams = tournament.getParticipatingTeams();
     GrouperInterface teamGrouper = new TeamGrouper(teams, groupSize);
-    return teamGrouper.groupTeams();
+    Map<Integer, Set<Team>> groups = teamGrouper.groupTeams();
+
+    groups
+        .entrySet()
+        .forEach(
+            entry -> {
+              // this is a dummy in the sense that entry.getKey() will get reassigned by the db as
+              // autoincremented id
+              GroupInDoubles dummy =
+                  new GroupInDoubles(entry.getKey(), entry.getValue(), tournament);
+              GroupInDoubles newGroup = groupInDoublesRepository.save(dummy);
+              for (Team t : new HashSet<>(newGroup.getMembers())) {
+                t.joinGroup(newGroup);
+                saveOrUpdateTeam(t);
+              }
+            });
+    return groups;
   }
 
   public Map<Long, Boolean> checkTeams(Map<Long, Boolean> idToCheckStatusMapping) throws Exception {

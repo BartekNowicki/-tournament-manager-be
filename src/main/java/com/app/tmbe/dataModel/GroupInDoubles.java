@@ -23,30 +23,33 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "groups_in_singles")
-public class GroupInSingles {
+@Table(name = "groups_in_doubles")
+public class GroupInDoubles {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
   private long id;
 
-  // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
+  // Bidirectional @ManyToMany, two parents, no children, one owner (Team)
   @JsonBackReference
-  @ManyToMany(mappedBy = "belongsToSinglesGroups")
-  private Set<Player> members = new HashSet<>();
+  @ManyToMany(mappedBy = "belongsToDoublesGroups")
+  private Set<Team> members = new HashSet<>();
 
   // Bidirectional @OneToMany, two parents, no children, one owner (GroupInSingles)
   @ManyToOne
-  @JoinColumn(name = "singles_tournament_id")
-  private SinglesTournament partOfSinglesTournament;
+  @JoinColumn(name = "doubles_tournament_id")
+  private DoublesTournament partOfDoublesTournament;
 
   @Override
   public String toString() {
-    return "GroupInSingles{" +
-            "id=" + id +
-            ", members=" + members +
-            ", partOfSinglesTournament=" + partOfSinglesTournament.getId() +
-            '}';
+    return "GroupInDoubles{"
+        + "id="
+        + id
+        + ", members="
+        + members
+        + ", partOfDoublesTournament="
+        + partOfDoublesTournament.getId()
+        + '}';
   }
 }

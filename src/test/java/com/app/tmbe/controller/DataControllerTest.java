@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @SpringBootTest
@@ -43,7 +44,7 @@ public class DataControllerTest {
   Player player2 =
       new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of(), Set.of());
 
-  Player player3 = new Player(3L, true, "Moe", "Broe", 9, "Moe cannot play", Set.of(), Set.of());
+  Player player3 = new Player(3L, true, "Moe", "Broe", 9, "Moe cannot play", new HashSet<>(), new HashSet<>());
 
 
   public DataControllerTest() throws JSONException {}

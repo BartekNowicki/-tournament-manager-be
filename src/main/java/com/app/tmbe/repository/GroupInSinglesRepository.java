@@ -6,4 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;
 
-public interface GroupRepository extends JpaRepository<GroupInSingles, Long> {}
+public interface GroupInSinglesRepository extends JpaRepository<GroupInSingles, Long> {}

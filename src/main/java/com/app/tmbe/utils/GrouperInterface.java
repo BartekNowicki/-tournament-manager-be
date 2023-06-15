@@ -7,6 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 public interface GrouperInterface {
-    public Map<Integer, Set<Player>> groupPlayers();
-    public Map<Integer, Set<Team>> groupTeams();
+    Map<Integer, Set<Player>> groupPlayers();
+    Map<Integer, Set<Team>> groupTeams();
 }

@@ -1,5 +1,7 @@
 package com.app.tmbe.dto;
 
+import com.app.tmbe.dataModel.GroupInDoubles;
+import com.app.tmbe.dataModel.GroupInSingles;
 import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.dataModel.Team;
 import com.app.tmbe.dataModel.Tournament;
@@ -23,12 +25,13 @@ public class DoublesTournamentDTO extends TournamentDTO {
       int groupSize,
       String comment,
       Set<Player> participatingPlayers,
-      Set<Team> participatingTeams) {
+      Set<Team> participatingTeams,
+      Set<GroupInDoubles> groups) {
     super(
         id, type, startDate, endDate, groupSize, comment, participatingPlayers, participatingTeams);
   }
 
   public static DoublesTournamentDTO badTournamentDTO(String message) {
-    return new DoublesTournamentDTO(0, null, null, null, 0, message, Set.of(), Set.of());
+    return new DoublesTournamentDTO(0, null, null, null, 0, message, Set.of(), Set.of(), Set.of());
   }
 }

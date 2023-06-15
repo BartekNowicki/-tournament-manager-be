@@ -56,12 +56,13 @@ public class DataController {
     }
   }
 
-  @GetMapping("/players/grouped/{groupSize}")
+  @GetMapping("/players/grouped/{singlesTournamentId}")
   public ResponseEntity<Map<Integer, Set<Player>>> getGroupedPlayers(
-      @PathVariable("groupSize") int groupSize) {
+      @PathVariable("singlesTournamentId") long singlesTournamentId) {
 
     try {
-      Map<Integer, Set<Player>> players = playerService.groupPlayers(groupSize);
+
+      Map<Integer, Set<Player>> players = playerService.groupPlayers(singlesTournamentId);
 
       Map<Integer, Set<Player>> playersMappedToDTO =
           players.entrySet().stream()
@@ -73,6 +74,30 @@ public class DataController {
       }
 
       return new ResponseEntity<>(playersMappedToDTO, HttpStatus.OK);
+
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @GetMapping("/teams/grouped/{doublesTournamentId}")
+  public ResponseEntity<Map<Integer, Set<Team>>> getGroupedTeams(
+      @PathVariable("doublesTournamentId") long doublesTournamentId) {
+
+    try {
+
+      Map<Integer, Set<Team>> teams = teamService.groupTeams(doublesTournamentId);
+
+      Map<Integer, Set<Team>> teamsMappedToDTO =
+          teams.entrySet().stream()
+              .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+      // TODO: map key to DTO not to itself
+
+      if (teams.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      return new ResponseEntity<>(teamsMappedToDTO, HttpStatus.OK);
 
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -111,29 +136,6 @@ public class DataController {
       }
 
       return new ResponseEntity<>(teams, HttpStatus.OK);
-
-    } catch (Exception e) {
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  @GetMapping("/teams/grouped/{groupSize}")
-  public ResponseEntity<Map<Integer, Set<Team>>> getGroupedTeams(
-      @PathVariable("groupSize") int groupSize) {
-
-    try {
-      Map<Integer, Set<Team>> teams = teamService.groupTeams(groupSize);
-
-      Map<Integer, Set<Team>> teamsMappedToDTO =
-          teams.entrySet().stream()
-              .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
-      // TODO: map key to DTO not to itself
-
-      if (teams.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
-
-      return new ResponseEntity<>(teamsMappedToDTO, HttpStatus.OK);
 
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -378,8 +380,8 @@ public class DataController {
     }
   }
 
-//  @PostMapping("/tournaments/assignToSingles")
-@GetMapping("/tournaments/assignToSingles")
+  //  @PostMapping("/tournaments/assignToSingles")
+  @GetMapping("/tournaments/assignToSingles")
   public ResponseEntity<? extends TournamentDTO> assignPlayersToSinglesTournament(
       @RequestParam Long tournamentId) {
 
@@ -395,8 +397,8 @@ public class DataController {
     }
   }
 
-//  @PostMapping("/tournaments/assignToDoubles")
-@GetMapping("/tournaments/assignToDoubles")
+  //  @PostMapping("/tournaments/assignToDoubles")
+  @GetMapping("/tournaments/assignToDoubles")
   public ResponseEntity<? extends TournamentDTO> assignTeamsToDoublesTournament(
       @RequestParam Long tournamentId) {
 
