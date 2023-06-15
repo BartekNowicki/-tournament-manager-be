@@ -25,8 +25,7 @@ import java.util.Set;
 public class PlayerService {
   @Autowired PlayerRepository playerRepository;
   @Autowired SinglesTournamentRepository singlesTournamentRepository;
-  @Autowired
-  GroupInSinglesRepository groupInSinglesRepository;
+  @Autowired GroupInSinglesRepository groupInSinglesRepository;
 
   public List<Player> getAllPlayers() {
     return playerRepository.findAll();
@@ -85,7 +84,7 @@ public class PlayerService {
     return playerRepository.findByIsChecked(true);
   }
 
-  public Map<Integer, Set<Player>> groupPlayers(long singlesTournamentId) {
+  public Map<Integer, Set<Player>> groupPlayers(long singlesTournamentId) throws Exception {
     // using the repo instead of the service to avoid the prohibited circular dependency
     // playerService <-> tournamentService
 
@@ -93,6 +92,10 @@ public class PlayerService {
         singlesTournamentRepository
             .findById(singlesTournamentId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid singles tournamentId"));
+
+    if (tournament.getGroups().size() > 0) {
+      throw new Exception("This tournament already has groups assigned to it!");
+    }
 
     int groupSize = tournament.getGroupSize();
     Set<Player> players = tournament.getParticipatingPlayers();

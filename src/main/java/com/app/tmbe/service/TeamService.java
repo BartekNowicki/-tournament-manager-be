@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
@@ -86,7 +85,7 @@ public class TeamService {
     return teamRepository.findByIsChecked(true);
   }
 
-  public Map<Integer, Set<Team>> groupTeams(long doublesTournamentId) {
+  public Map<Integer, Set<Team>> groupTeams(long doublesTournamentId) throws Exception {
     // using the repo instead of the service to avoid the prohibited circular dependency
     // playerService <-> tournamentService
 
@@ -94,6 +93,10 @@ public class TeamService {
         doublesTournamentRepository
             .findById(doublesTournamentId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid doubles tournamentId"));
+
+    if (tournament.getGroups().size() > 0) {
+      throw new Exception("This tournament already has groups assigned to it!");
+    }
 
     int groupSize = tournament.getGroupSize();
     Set<Team> teams = tournament.getParticipatingTeams();

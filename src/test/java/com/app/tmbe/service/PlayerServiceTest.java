@@ -1,5 +1,6 @@
 package com.app.tmbe.service;
 
+import com.app.tmbe.dataModel.GroupInSingles;
 import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -32,18 +34,35 @@ class PlayerServiceTest {
 
   @InjectMocks PlayerService playerService;
   @Mock PlayerRepository playerRepository;
-  @Mock
-  SinglesTournamentRepository singlesTournamentRepository;
+  @Mock SinglesTournamentRepository singlesTournamentRepository;
   private final List<Player> list = new ArrayList<>();
 
   @BeforeEach
   void setUp() {
 
     Player player1 =
-        new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", new HashSet<>(), new HashSet<>());
+        new Player(
+            1L,
+            true,
+            "Joe",
+            "Doe",
+            10,
+            "Joe Doe is a great player",
+            new HashSet<>(),
+            new HashSet<>());
     Player player2 =
-        new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", new HashSet<>(), new HashSet<>());
-    Player player3 = new Player(3L, false, "Moe", "Broe", 9, "Moe cannot play", new HashSet<>(), new HashSet<>());
+        new Player(
+            2L,
+            true,
+            "Jack",
+            "Schmoe",
+            9,
+            "Jack Schmoe is a puny player",
+            new HashSet<>(),
+            new HashSet<>());
+    Player player3 =
+        new Player(
+            3L, false, "Moe", "Broe", 9, "Moe cannot play", new HashSet<>(), new HashSet<>());
 
     list.add(player2);
     list.add(player3);
@@ -92,7 +111,15 @@ class PlayerServiceTest {
   void deletePlayerById_success() throws NoEntityFoundCustomException {
     // given
     Player player =
-        new Player(10L, true, "Joe", "Doe", 10, "Joe Doe is a great player", new HashSet<>(), new HashSet<>());
+        new Player(
+            10L,
+            true,
+            "Joe",
+            "Doe",
+            10,
+            "Joe Doe is a great player",
+            new HashSet<>(),
+            new HashSet<>());
     SinglesTournament singlesTournament =
         new SinglesTournament(
             20L,
@@ -142,4 +169,40 @@ class PlayerServiceTest {
     assertEquals(1, playersUnChecked.size());
     verify(playerRepository, times(2)).findByIsChecked(anyBoolean());
   }
+
+  @Test
+  void groupPlayers_failure_whenAlreadyGrouped() throws Exception {
+
+    // given
+    Player joe = new Player(1L, true, "Joe", "Joe", 1, "Joe", Set.of(), Set.of());
+
+    SinglesTournament tournament = new SinglesTournament();
+    Set<GroupInSingles> groups =
+        Set.of(new GroupInSingles(1L, Set.of(joe), new SinglesTournament()));
+
+    SinglesTournament tournamentUnderTest =
+        new SinglesTournament(
+            1L,
+            TournamentType.SINGLES,
+            Date.from(Instant.now()),
+            Date.from(Instant.now()),
+            10,
+            "",
+            Set.of(joe));
+    tournamentUnderTest.setGroups(groups);
+
+    // when
+    when(singlesTournamentRepository.findById(anyLong()))
+        .thenReturn(Optional.of(tournamentUnderTest));
+
+    // then
+    Exception exception =
+        assertThrows(
+            Exception.class,
+            () -> {
+              playerService.groupPlayers(1L);
+            });
+    assertTrue(exception.getMessage().contains("This tournament already has groups assigned to it!"));
+  }
 }
+
