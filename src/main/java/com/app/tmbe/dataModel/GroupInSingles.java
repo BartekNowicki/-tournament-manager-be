@@ -35,7 +35,7 @@ public class GroupInSingles {
   private long id;
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
-  //@JsonBackReference
+  @JsonBackReference
   @ManyToMany(mappedBy = "belongsToSinglesGroups")
   private Set<Player> members = new HashSet<>();
 

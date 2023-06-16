@@ -27,7 +27,7 @@ import java.util.Set;
 public class DoublesTournament extends Tournament {
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
-  //@JsonBackReference
+  @JsonBackReference
   @ManyToMany(mappedBy = "playedDoublesTournaments")
   private Set<Team> participatingTeams = new HashSet<>();
 
