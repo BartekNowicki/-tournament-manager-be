@@ -2,6 +2,8 @@ package com.app.tmbe.dataModel;
 
 import com.app.tmbe.enumConverter.TournamentType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
@@ -14,6 +16,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @Entity
 @Getter
 @Setter
@@ -24,12 +27,12 @@ import java.util.Set;
 public class DoublesTournament extends Tournament {
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
-  @JsonBackReference
+  //@JsonBackReference
   @ManyToMany(mappedBy = "playedDoublesTournaments")
   private Set<Team> participatingTeams = new HashSet<>();
 
   // Bidirectional @OneToMany, two parents, no children, one owner (GroupInDoubles)
-  @OneToMany(mappedBy="partOfDoublesTournament")
+  @OneToMany(mappedBy = "partOfDoublesTournament")
   private Set<GroupInDoubles> groups;
 
   public DoublesTournament(
@@ -54,12 +57,14 @@ public class DoublesTournament extends Tournament {
     team.getPlayedDoublesTournaments().remove(this);
   }
 
-
   @Override
   public String toString() {
-    return "DoublesTournament{" +
-            "participatingTeams=" + participatingTeams.size() +
-            ", groups=" + groups.size() +
-            "} " + super.toString();
+    return "DoublesTournament{"
+        + "participatingTeams="
+        + participatingTeams.size()
+        + ", groups="
+        + groups.size()
+        + "} "
+        + super.toString();
   }
 }

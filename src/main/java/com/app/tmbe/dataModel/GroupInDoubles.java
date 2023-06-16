@@ -1,6 +1,8 @@
 package com.app.tmbe.dataModel;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +20,7 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @Entity
 @Getter
 @Setter
@@ -32,7 +35,7 @@ public class GroupInDoubles {
   private long id;
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Team)
-  @JsonBackReference
+  //@JsonBackReference
   @ManyToMany(mappedBy = "belongsToDoublesGroups")
   private Set<Team> members = new HashSet<>();
 
