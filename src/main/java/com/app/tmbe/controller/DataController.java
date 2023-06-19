@@ -397,7 +397,6 @@ public class DataController {
     }
   }
 
-  //  @PostMapping("/tournaments/assignToDoubles")
   @GetMapping("/tournaments/assignToDoubles")
   public ResponseEntity<? extends TournamentDTO> assignTeamsToDoublesTournament(
       @RequestParam Long tournamentId) {

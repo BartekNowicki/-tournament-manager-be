@@ -6,6 +6,7 @@ import com.app.tmbe.dataModel.Tournament;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class TournamentDTOMapper {
@@ -18,7 +19,10 @@ public class TournamentDTOMapper {
           tournament.getEndDate(),
           tournament.getGroupSize(),
           tournament.getComment(),
-          ((SinglesTournament) tournament).getParticipatingPlayers(),
+          ((SinglesTournament) tournament)
+              .getParticipatingPlayers().stream()
+                  .map(player -> player.getId())
+                  .collect(Collectors.toSet()),
           Set.of(),
           ((SinglesTournament) tournament).getGroups());
 
@@ -31,7 +35,10 @@ public class TournamentDTOMapper {
           tournament.getGroupSize(),
           tournament.getComment(),
           Set.of(),
-          ((DoublesTournament) tournament).getParticipatingTeams(),
+          ((DoublesTournament) tournament)
+              .getParticipatingTeams().stream()
+                  .map(team -> team.getId())
+                  .collect(Collectors.toSet()),
           ((DoublesTournament) tournament).getGroups());
     }
     return TournamentDTO.badTournamentDTO("something went wrong in the tournament DTO mapper");

@@ -22,8 +22,8 @@ public class SinglesTournamentDTO extends TournamentDTO {
       Date endDate,
       int groupSize,
       String comment,
-      Set<Player> participatingPlayers,
-      Set<Team> participatingTeams,
+      Set<Long> participatingPlayers,
+      Set<Long> participatingTeams,
       Set<GroupInSingles> groups) {
     super(
         id, type, startDate, endDate, groupSize, comment, participatingPlayers, participatingTeams);

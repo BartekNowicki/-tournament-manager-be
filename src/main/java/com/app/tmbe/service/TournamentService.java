@@ -96,8 +96,11 @@ public class TournamentService {
     if (tournamentToUpdate.isEmpty()) {
       SinglesTournament savedSinglesTournament =
           singlesTournamentRepository.save(singlesTournament);
-      updatePlayersOnAddedOrUpdatedTournament(
-          singlesTournament.getParticipatingPlayers(), savedSinglesTournament);
+      if (singlesTournament.getParticipatingPlayers().size() > 0) {
+        updatePlayersOnAddedOrUpdatedTournament(
+            singlesTournament.getParticipatingPlayers(), savedSinglesTournament);
+      }
+
       return savedSinglesTournament;
     } else {
       SinglesTournament t = tournamentToUpdate.get();
@@ -120,8 +123,11 @@ public class TournamentService {
     if (tournamentToUpdate.isEmpty()) {
       DoublesTournament savedDoublesTournament =
           doublesTournamentRepository.save(doublesTournament);
-      updateTeamsOnAddedOrUpdatedTournament(
-          doublesTournament.getParticipatingTeams(), savedDoublesTournament);
+      if (doublesTournament.getParticipatingTeams().size() > 0) {
+        updateTeamsOnAddedOrUpdatedTournament(
+            doublesTournament.getParticipatingTeams(), savedDoublesTournament);
+      }
+
       return savedDoublesTournament;
     } else {
       DoublesTournament t = tournamentToUpdate.get();
@@ -150,7 +156,7 @@ public class TournamentService {
       Set<Player> included = new HashSet<>(playerService.findAllByIsChecked(true));
       Set<Player> notIncluded = new HashSet<>(tournamentToAssign.getParticipatingPlayers());
       notIncluded.removeAll(included);
-//      included.remove(playerService.getPlayerById(-1L));
+      //      included.remove(playerService.getPlayerById(-1L));
       tournamentToAssign.setParticipatingPlayers(included);
 
       for (Player player : tournamentToAssign.getParticipatingPlayers()) {

@@ -1,7 +1,5 @@
 package com.app.tmbe.dataModel;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +17,6 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @Entity
 @Getter
 @Setter
@@ -111,9 +108,9 @@ public class Team {
         + comment
         + '\''
         + ", playedDoublesTournaments="
-        + playedDoublesTournaments.size()
+        + playedDoublesTournaments
         + ", belongsToDoublesGroups="
-        + belongsToDoublesGroups.size()
+        + belongsToDoublesGroups
         + '}';
   }
 }
