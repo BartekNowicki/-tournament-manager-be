@@ -128,6 +128,7 @@ class PlayerServiceTest {
             new Date(),
             1,
             "the singlesTournament was awesome",
+            new HashSet<>(),
             new HashSet<>());
 
     Set<SinglesTournament> playedSinglesTournaments = new HashSet<SinglesTournament>();
@@ -188,7 +189,8 @@ class PlayerServiceTest {
             Date.from(Instant.now()),
             10,
             "",
-            Set.of(joe));
+            Set.of(joe),
+            Set.of());
     tournamentUnderTest.setGroups(groups);
 
     // when
@@ -202,7 +204,7 @@ class PlayerServiceTest {
             () -> {
               playerService.groupPlayers(1L);
             });
-    assertTrue(exception.getMessage().contains("This tournament already has groups assigned to it!"));
+    assertTrue(
+        exception.getMessage().contains("This tournament already has groups assigned to it!"));
   }
 }
-

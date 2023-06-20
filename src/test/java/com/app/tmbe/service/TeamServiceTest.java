@@ -68,7 +68,8 @@ class TeamServiceTest {
             Date.from(Instant.now()),
             10,
             "",
-            Set.of(joesTeam));
+            Set.of(joesTeam),
+            Set.of());
     tournamentUnderTest.setGroups(groups);
 
     // when

@@ -100,7 +100,6 @@ public class TournamentService {
         updatePlayersOnAddedOrUpdatedTournament(
             singlesTournament.getParticipatingPlayers(), savedSinglesTournament);
       }
-
       return savedSinglesTournament;
     } else {
       SinglesTournament t = tournamentToUpdate.get();
@@ -109,7 +108,12 @@ public class TournamentService {
       t.setEndDate(singlesTournament.getEndDate());
       t.setStartDate(singlesTournament.getStartDate());
       t.setGroupSize(singlesTournament.getGroupSize());
-      t.setParticipatingPlayers(singlesTournament.getParticipatingPlayers());
+      if (singlesTournament.getParticipatingPlayers().size() > 0) {
+        t.setParticipatingPlayers(singlesTournament.getParticipatingPlayers());
+      }
+      if (singlesTournament.getGroups().size() > 0) {
+        t.setGroups(singlesTournament.getGroups());
+      }
 
       SinglesTournament savedSinglesTournament = singlesTournamentRepository.save(t);
 
@@ -136,7 +140,12 @@ public class TournamentService {
       t.setEndDate(doublesTournament.getEndDate());
       t.setStartDate(doublesTournament.getStartDate());
       t.setGroupSize(doublesTournament.getGroupSize());
-      t.setParticipatingTeams(doublesTournament.getParticipatingTeams());
+      if (doublesTournament.getParticipatingTeams().size() > 0) {
+        t.setParticipatingTeams(doublesTournament.getParticipatingTeams());
+      }
+      if (doublesTournament.getGroups().size() > 0) {
+        t.setGroups(doublesTournament.getGroups());
+      }
 
       DoublesTournament savedDoublesTournament = doublesTournamentRepository.save(t);
 

@@ -3,6 +3,7 @@ package com.app.tmbe.dataModel;
 import com.app.tmbe.enumConverter.TournamentType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -29,8 +30,9 @@ public class SinglesTournament extends Tournament {
   private Set<Player> participatingPlayers = new HashSet<>();
 
   // Bidirectional @OneToMany, two parents, no children, one owner (GroupInSingles)
-  @OneToMany(mappedBy = "partOfSinglesTournament")
-  private Set<GroupInSingles> groups;
+  // @JsonBackReference -- no, to many back references cause a loop
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "partOfSinglesTournament")
+  private Set<GroupInSingles> groups = new HashSet<>();
 
   public SinglesTournament(
       long id,
@@ -39,9 +41,11 @@ public class SinglesTournament extends Tournament {
       Date endDate,
       int groupSize,
       String comment,
-      Set<Player> participatingPlayers) {
+      Set<Player> participatingPlayers,
+      Set<GroupInSingles> groups) {
     super(id, type, startDate, endDate, groupSize, comment);
     this.participatingPlayers = participatingPlayers;
+    this.groups = groups;
   }
 
   public void addPlayer(Player player) {
@@ -52,6 +56,16 @@ public class SinglesTournament extends Tournament {
   public void removePlayer(Player player) {
     this.participatingPlayers.remove(player);
     player.getPlayedSinglesTournaments().remove(this);
+  }
+
+  public void addGroup(GroupInSingles group) {
+    this.groups.add(group);
+    //group.setPartOfSinglesTournament(this); no it is done in the group constructor
+  }
+
+  public void removeGroup(GroupInSingles group) {
+    this.groups.remove(groups);
+    group.setPartOfSinglesTournament(this);
   }
 
   @Override

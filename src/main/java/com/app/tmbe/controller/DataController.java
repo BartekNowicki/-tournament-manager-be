@@ -1,10 +1,12 @@
 package com.app.tmbe.controller;
 
 import com.app.tmbe.dataModel.DoublesTournament;
+import com.app.tmbe.dataModel.GroupInDoubles;
 import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.dataModel.TournamentRequestEntity;
 import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.dataModel.Team;
+import com.app.tmbe.dto.GroupDTO;
 import com.app.tmbe.dto.PlayerDTO;
 import com.app.tmbe.dto.PlayerDTOMapper;
 import com.app.tmbe.dto.TeamDTO;
@@ -12,6 +14,8 @@ import com.app.tmbe.dto.TeamDTOMapper;
 import com.app.tmbe.dto.TournamentDTO;
 import com.app.tmbe.dto.TournamentDTOMapper;
 import com.app.tmbe.enumConverter.TournamentType;
+import com.app.tmbe.repository.GroupInDoublesRepository;
+import com.app.tmbe.repository.GroupInSinglesRepository;
 import com.app.tmbe.service.TeamService;
 import com.app.tmbe.service.TournamentService;
 import com.app.tmbe.service.PlayerService;
@@ -21,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +41,33 @@ public class DataController {
   @Autowired private PlayerService playerService;
   @Autowired private TeamService teamService;
   @Autowired private TournamentService tournamentService;
+  @Autowired private GroupInSinglesRepository groupInSinglesRepository;
+  @Autowired private GroupInDoublesRepository groupInDoublesRepository;
+
+  @GetMapping("/groups")
+  public ResponseEntity<List<GroupDTO>> getAllGroups() {
+
+    try {
+      List<GroupDTO> groups = new ArrayList<>();
+      groups.addAll(
+          groupInSinglesRepository.findAll().stream()
+              .map(GroupDTO::fromGroupInSingles)
+              .collect(Collectors.toList()));
+      groups.addAll(
+          groupInDoublesRepository.findAll().stream()
+              .map(GroupDTO::fromGroupInDoubles)
+              .collect(Collectors.toList()));
+
+      if (groups.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      return new ResponseEntity<>(groups, HttpStatus.OK);
+
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
   @GetMapping("/players")
   public ResponseEntity<List<PlayerDTO>> getAllPlayersOrderByIdAsc() {
@@ -336,7 +369,6 @@ public class DataController {
 
   @PutMapping("/tournaments")
   public ResponseEntity<? extends TournamentDTO> saveOrUpdateTournament(
-      // @RequestBody SinglesTournament singlesTournament) {
       @RequestBody TournamentRequestEntity t) {
 
     if (t.getType() == TournamentType.SINGLES) {
@@ -348,7 +380,8 @@ public class DataController {
               t.getEndDate(),
               t.getGroupSize(),
               t.getComment(),
-              t.getParticipatingPlayers());
+              new HashSet<>(),
+              new HashSet<>());
       try {
 
         TournamentDTO savedOrUpdatedTournament =
@@ -367,7 +400,8 @@ public class DataController {
               t.getEndDate(),
               t.getGroupSize(),
               t.getComment(),
-              t.getParticipatingTeams());
+              new HashSet<>(),
+              new HashSet<>());
       try {
 
         TournamentDTO savedOrUpdatedTournament =

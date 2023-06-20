@@ -19,8 +19,9 @@ public class TournamentDTO {
 
   private Set<Long> participatingPlayers;
   private Set<Long> participatingTeams;
+  private Set<Long> groups;
 
   public static TournamentDTO badTournamentDTO(String message) {
-    return new TournamentDTO(0, null, null, null, 0, message, null, null);
+    return new TournamentDTO(0, null, null, null, 0, message, null, null, null);
   }
 }

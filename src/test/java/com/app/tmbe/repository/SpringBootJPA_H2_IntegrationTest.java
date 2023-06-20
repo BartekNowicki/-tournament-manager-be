@@ -25,7 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = Application.class)
 public class SpringBootJPA_H2_IntegrationTest {
 
-  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of(), Set.of());
+  Player player1 =
+      new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of(), Set.of());
 
   Player player2 =
       new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of(), Set.of());
@@ -38,10 +39,18 @@ public class SpringBootJPA_H2_IntegrationTest {
           new Date(),
           3,
           "singlesTournament1 was awesome",
-          Set.of(player1, player2));
+          Set.of(player1, player2),
+          Set.of());
   SinglesTournament singlesTournament2 =
       new SinglesTournament(
-          2L, TournamentType.DOUBLES, new Date(), new Date(), 6, "singlesTournament1 was awesome", Set.of(player1));
+          2L,
+          TournamentType.DOUBLES,
+          new Date(),
+          new Date(),
+          6,
+          "singlesTournament1 was awesome",
+          Set.of(player1),
+          Set.of());
 
   @Autowired private PlayerRepository playerRepository;
   @Autowired private SinglesTournamentRepository singlesTournamentRepository;

@@ -15,4 +15,6 @@ public class TournamentRequestEntity {
   private String comment;
   private Set<Player> participatingPlayers;
   private Set<Team> participatingTeams;
+  private Set<GroupInSingles> groupsInSingles;
+  private Set<GroupInDoubles> groupsInDoubles;
 }

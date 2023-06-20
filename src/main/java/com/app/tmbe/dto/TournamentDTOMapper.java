@@ -24,7 +24,9 @@ public class TournamentDTOMapper {
                   .map(player -> player.getId())
                   .collect(Collectors.toSet()),
           Set.of(),
-          ((SinglesTournament) tournament).getGroups());
+          ((SinglesTournament) tournament).getGroups().stream()
+                  .map(group -> group.getId())
+                  .collect(Collectors.toSet()));
 
     } else if (tournament instanceof DoublesTournament) {
       return new DoublesTournamentDTO(
@@ -39,7 +41,9 @@ public class TournamentDTOMapper {
               .getParticipatingTeams().stream()
                   .map(team -> team.getId())
                   .collect(Collectors.toSet()),
-          ((DoublesTournament) tournament).getGroups());
+          ((DoublesTournament) tournament).getGroups().stream()
+                  .map(group -> group.getId())
+                  .collect(Collectors.toSet()));
     }
     return TournamentDTO.badTournamentDTO("something went wrong in the tournament DTO mapper");
   }

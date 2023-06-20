@@ -115,7 +115,9 @@ public class PlayerService {
                 p.joinGroup(newGroup);
                 saveOrUpdatePlayer(p);
               }
+              tournament.addGroup(newGroup);
             });
+    singlesTournamentRepository.save(tournament);
     return groups;
   }
 

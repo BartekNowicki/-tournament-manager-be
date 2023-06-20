@@ -39,13 +39,14 @@ public class DataControllerTest {
   @Autowired private PlayerRepository playerRepository;
   @Autowired private SinglesTournamentRepository singlesTournamentRepository;
 
-  Player player1 = new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of(), Set.of());
+  Player player1 =
+      new Player(1L, true, "Joe", "Doe", 10, "Joe Doe is a great player", Set.of(), Set.of());
 
   Player player2 =
       new Player(2L, true, "Jack", "Schmoe", 9, "Jack Schmoe is a puny player", Set.of(), Set.of());
 
-  Player player3 = new Player(3L, true, "Moe", "Broe", 9, "Moe cannot play", new HashSet<>(), new HashSet<>());
-
+  Player player3 =
+      new Player(3L, true, "Moe", "Broe", 9, "Moe cannot play", new HashSet<>(), new HashSet<>());
 
   public DataControllerTest() throws JSONException {}
 
@@ -102,7 +103,8 @@ public class DataControllerTest {
           new Date(),
           3,
           "singlesTournament1 was awesome",
-          Set.of(player1, player2));
+          Set.of(player1, player2),
+          Set.of());
   SinglesTournament singlesTournament2 =
       new SinglesTournament(
           2L,
@@ -111,7 +113,8 @@ public class DataControllerTest {
           new Date(),
           6,
           "singlesTournament2 was also awesome",
-          Set.of(player1));
+          Set.of(player1),
+          Set.of());
 
   @BeforeEach
   public void setUp() {
@@ -145,7 +148,7 @@ public class DataControllerTest {
         .andExpect(jsonPath("$.firstName").value(equalTo("Joe")));
   }
 
-  //@Test not deterministic
+  // @Test not deterministic
   void getAllTournamentsOrderByIdAsc_success() throws Exception {
     this.mockMvc
         .perform(get("/api/data/tournaments"))
@@ -243,7 +246,7 @@ public class DataControllerTest {
         .andExpect(jsonPath("$.firstName").value(equalTo("anotherJoe")));
   }
 
-  //@Test
+  // @Test
   void saveOrUpdatePlayer_saveNew_ManyToManyPropagation_success() throws Exception {
     MockHttpServletRequestBuilder builder =
         MockMvcRequestBuilders.put("/api/data/players")

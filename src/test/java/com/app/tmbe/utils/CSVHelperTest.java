@@ -106,6 +106,7 @@ class CSVHelperTest {
               df.parse(csvRecord.get("endDate")),
               Integer.parseInt(csvRecord.get("groupSize")),
               csvRecord.get("comment"),
+              null,
               null);
       singlesTournaments.add(singlesTournament);
 

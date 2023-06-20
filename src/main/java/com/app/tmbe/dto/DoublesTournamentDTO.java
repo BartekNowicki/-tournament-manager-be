@@ -26,9 +26,9 @@ public class DoublesTournamentDTO extends TournamentDTO {
       String comment,
       Set<Long> participatingPlayers,
       Set<Long> participatingTeams,
-      Set<GroupInDoubles> groups) {
+      Set<Long> groups) {
     super(
-        id, type, startDate, endDate, groupSize, comment, participatingPlayers, participatingTeams);
+        id, type, startDate, endDate, groupSize, comment, participatingPlayers, participatingTeams, groups);
   }
 
   public static DoublesTournamentDTO badTournamentDTO(String message) {
