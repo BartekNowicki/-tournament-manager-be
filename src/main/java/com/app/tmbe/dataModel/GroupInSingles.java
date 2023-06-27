@@ -32,11 +32,12 @@ public class GroupInSingles {
   private long id;
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
-  @JsonBackReference
+  @JsonBackReference(value = "groupsinsingles-members")
   @ManyToMany(mappedBy = "belongsToSinglesGroups")
   private Set<Player> members = new HashSet<>();
 
   // Bidirectional @OneToMany, two parents, no children, one owner (GroupInSingles)
+  @JsonBackReference(value = "groupinsingles-partofsinglestournament") // new
   @ManyToOne
   @JoinColumn(name = "singles_tournament_id")
   private SinglesTournament partOfSinglesTournament;

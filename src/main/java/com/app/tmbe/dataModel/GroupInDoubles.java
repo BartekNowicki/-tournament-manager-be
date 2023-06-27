@@ -32,7 +32,7 @@ public class GroupInDoubles {
   private long id;
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Team)
-  @JsonBackReference
+  @JsonBackReference(value="groupsindoubles-members")
   @ManyToMany(mappedBy = "belongsToDoublesGroups")
   private Set<Team> members = new HashSet<>();
 

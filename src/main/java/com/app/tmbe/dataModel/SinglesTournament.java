@@ -26,13 +26,24 @@ public class SinglesTournament extends Tournament {
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
   @JsonBackReference
-  @ManyToMany(mappedBy = "playedSinglesTournaments")
+  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "playedSinglesTournaments")
   private Set<Player> participatingPlayers = new HashSet<>();
 
   // Bidirectional @OneToMany, two parents, no children, one owner (GroupInSingles)
-  // @JsonBackReference -- no, to many back references cause a loop
+  @JsonBackReference(value = "singlestournament-groups")
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "partOfSinglesTournament")
   private Set<GroupInSingles> groups = new HashSet<>();
+
+  @Override
+  public String toString() {
+    return "SinglesTournament{"
+        + "participatingPlayers="
+        + participatingPlayers
+        + ", groups="
+        + groups
+        + "} "
+        + super.toString();
+  }
 
   public SinglesTournament(
       long id,
@@ -60,22 +71,11 @@ public class SinglesTournament extends Tournament {
 
   public void addGroup(GroupInSingles group) {
     this.groups.add(group);
-    //group.setPartOfSinglesTournament(this); no it is done in the group constructor
+    // group.setPartOfSinglesTournament(this); no it is done in the group constructor
   }
 
   public void removeGroup(GroupInSingles group) {
-    this.groups.remove(groups);
-    group.setPartOfSinglesTournament(this);
-  }
-
-  @Override
-  public String toString() {
-    return "SinglesTournament{"
-        + "participatingPlayers="
-        + participatingPlayers
-        + ", groups="
-        + groups
-        + "} "
-        + super.toString();
+    this.groups.remove(group);
+    group.setPartOfSinglesTournament(null);
   }
 }

@@ -4,6 +4,7 @@ import com.app.tmbe.dataModel.GroupInSingles;
 import com.app.tmbe.dataModel.Player;
 import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
+import com.app.tmbe.repository.GroupInDoublesRepository;
 import com.app.tmbe.repository.GroupInSinglesRepository;
 import com.app.tmbe.repository.PlayerRepository;
 
@@ -20,12 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerService {
   @Autowired PlayerRepository playerRepository;
   @Autowired SinglesTournamentRepository singlesTournamentRepository;
   @Autowired GroupInSinglesRepository groupInSinglesRepository;
+  @Autowired GroupInDoublesRepository groupInDoublesRepository;
 
   public List<Player> getAllPlayers() {
     return playerRepository.findAll();
@@ -98,7 +101,10 @@ public class PlayerService {
     }
 
     int groupSize = tournament.getGroupSize();
-    Set<Player> players = tournament.getParticipatingPlayers();
+    Set<Player> players =
+        tournament.getParticipatingPlayers().stream()
+            .filter(p -> p.getId() != -1)
+            .collect(Collectors.toSet());
     GrouperInterface playerGrouper = new PlayerGrouper(players, groupSize);
     Map<Integer, Set<Player>> groups = playerGrouper.groupPlayers();
 
@@ -119,6 +125,36 @@ public class PlayerService {
             });
     singlesTournamentRepository.save(tournament);
     return groups;
+  }
+
+  public List<Player> unGroupPlayers(long singlesTournamentId) throws Exception {
+    // using the repo instead of the service to avoid the prohibited circular dependency
+    // playerService <-> tournamentService
+
+    SinglesTournament tournament =
+        singlesTournamentRepository
+            .findById(singlesTournamentId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid singles tournamentId"));
+
+    if (tournament.getGroups().size() == 0) {
+      throw new Exception("This tournament has no groups assigned to it!");
+    }
+
+    Set<GroupInSingles> groups = new HashSet<>(tournament.getGroups());
+
+    groups.forEach(
+        g -> {
+          for (Player p : new HashSet<>(g.getMembers())) {
+            p.leaveGroup(g);
+            saveOrUpdatePlayer(p);
+          }
+          tournament.removeGroup(g);
+          groupInSinglesRepository.delete(g);
+        });
+
+    singlesTournamentRepository.save(tournament);
+
+    return playerRepository.findAll();
   }
 
   public Map<Long, Boolean> checkPlayers(Map<Long, Boolean> idToCheckStatusMapping)

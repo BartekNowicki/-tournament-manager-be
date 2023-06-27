@@ -113,6 +113,28 @@ public class DataController {
     }
   }
 
+  @GetMapping("/players/ungroup/{singlesTournamentId}")
+  public ResponseEntity<List<PlayerDTO>> unGroupPlayers(
+      @PathVariable("singlesTournamentId") long singlesTournamentId) {
+
+    try {
+
+      List<PlayerDTO> players =
+          playerService.unGroupPlayers(singlesTournamentId).stream()
+              .map(PlayerDTOMapper::toPlayerDTO)
+              .collect(Collectors.toList());
+
+      if (players.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      return new ResponseEntity<>(players, HttpStatus.OK);
+
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @GetMapping("/teams/grouped/{doublesTournamentId}")
   public ResponseEntity<Map<Integer, Set<Team>>> getGroupedTeams(
       @PathVariable("doublesTournamentId") long doublesTournamentId) {
@@ -414,7 +436,6 @@ public class DataController {
     }
   }
 
-  //  @PostMapping("/tournaments/assignToSingles")
   @GetMapping("/tournaments/assignToSingles")
   public ResponseEntity<? extends TournamentDTO> assignPlayersToSinglesTournament(
       @RequestParam Long tournamentId) {

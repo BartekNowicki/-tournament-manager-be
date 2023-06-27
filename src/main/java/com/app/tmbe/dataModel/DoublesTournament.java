@@ -25,14 +25,25 @@ import java.util.Set;
 public class DoublesTournament extends Tournament {
 
   // Bidirectional @ManyToMany, two parents, no children, one owner (Player)
-  @JsonBackReference
-  @ManyToMany(mappedBy = "playedDoublesTournaments")
+  @JsonBackReference(value = "doublestournament-teams")
+  @ManyToMany(fetch = FetchType.EAGER, mappedBy = "playedDoublesTournaments")
   private Set<Team> participatingTeams = new HashSet<>();
 
   // Bidirectional @OneToMany, two parents, no children, one owner (GroupInDoubles)
-  // @JsonBackReference -- no, to many back references cause a loop
+  @JsonBackReference(value = "doublestournament-groups")
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "partOfDoublesTournament")
   private Set<GroupInDoubles> groups = new HashSet<>();
+
+  @Override
+  public String toString() {
+    return "DoublesTournament{"
+        + "participatingTeams="
+        + participatingTeams
+        + ", groups="
+        + groups
+        + "} "
+        + super.toString();
+  }
 
   public DoublesTournament(
       long id,
@@ -66,16 +77,5 @@ public class DoublesTournament extends Tournament {
   public void removeGroup(GroupInDoubles group) {
     this.groups.remove(groups);
     group.setPartOfDoublesTournament(null);
-  }
-
-  @Override
-  public String toString() {
-    return "DoublesTournament{"
-        + "participatingTeams="
-        + participatingTeams
-        + ", groups="
-        + groups
-        + "} "
-        + super.toString();
   }
 }
