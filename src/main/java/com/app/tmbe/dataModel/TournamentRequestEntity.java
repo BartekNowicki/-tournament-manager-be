@@ -13,8 +13,9 @@ public class TournamentRequestEntity {
   private Date endDate;
   private int groupSize;
   private String comment;
-  private Set<Player> participatingPlayers;
-  private Set<Team> participatingTeams;
-  private Set<GroupInSingles> groupsInSingles;
-  private Set<GroupInDoubles> groupsInDoubles;
+  //  private Set<Long> participatingPlayers;
+  //  private Set<Long> participatingTeams;
+  //  private Set<Long> groupsInSingles;
+  //  private Set<Long> groupsInDoubles;
+  //  private Set<Long> groups;
 }
