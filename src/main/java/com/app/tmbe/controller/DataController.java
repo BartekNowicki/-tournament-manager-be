@@ -89,7 +89,7 @@ public class DataController {
     }
   }
 
-  @GetMapping("/players/grouped/{singlesTournamentId}")
+  @GetMapping("/players/group/{singlesTournamentId}")
   public ResponseEntity<Map<Integer, Set<Player>>> getGroupedPlayers(
       @PathVariable("singlesTournamentId") long singlesTournamentId) {
 

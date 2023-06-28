@@ -70,15 +70,12 @@ public class PlayerService {
       return playerRepository.save(player);
     } else {
       Player p = playerToUpdate.get();
-      Set<SinglesTournament> totalTournamentsPlayed =
-          new HashSet<>(player.getPlayedSinglesTournaments());
-      totalTournamentsPlayed.addAll(p.getPlayedSinglesTournaments());
       p.setFirstName(player.getFirstName());
       p.setLastName(player.getLastName());
       p.setComment(player.getComment());
       p.setIsChecked(player.getIsChecked());
       p.setStrength(player.getStrength());
-      p.setPlayedSinglesTournaments(totalTournamentsPlayed);
+      p.setPlayedSinglesTournaments(player.getPlayedSinglesTournaments());
       return playerRepository.save(p);
     }
   }

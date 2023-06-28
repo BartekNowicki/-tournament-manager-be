@@ -95,28 +95,18 @@ public class Player {
     this.belongsToSinglesGroups.remove(group);
   }
 
+
   @Override
   public String toString() {
-    return "Player{"
-        + "id="
-        + id
-        + ", isChecked="
-        + isChecked
-        + ", firstName='"
-        + firstName
-        + '\''
-        + ", lastName='"
-        + lastName
-        + '\''
-        + ", strength="
-        + strength
-        + ", comment='"
-        + comment
-        + '\''
-        + ", playedSinglesTournaments="
-        + playedSinglesTournaments
-        + ", singlesGroups="
-        + belongsToSinglesGroups
-        + '}';
+    return "Player{" +
+            "id=" + id +
+            ", isChecked=" + isChecked +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", strength=" + strength +
+            ", comment='" + comment + '\'' +
+            ", playedSinglesTournaments=" + playedSinglesTournaments +
+            ", belongsToSinglesGroups=" + belongsToSinglesGroups +
+            '}';
   }
 }
