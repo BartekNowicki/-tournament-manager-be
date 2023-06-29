@@ -1,7 +1,6 @@
 package com.app.tmbe.controller;
 
 import com.app.tmbe.dataModel.DoublesTournament;
-import com.app.tmbe.dataModel.GroupInDoubles;
 import com.app.tmbe.dataModel.SinglesTournament;
 import com.app.tmbe.dataModel.TournamentRequestEntity;
 import com.app.tmbe.dataModel.Player;
@@ -135,7 +134,7 @@ public class DataController {
     }
   }
 
-  @GetMapping("/teams/grouped/{doublesTournamentId}")
+  @GetMapping("/teams/group/{doublesTournamentId}")
   public ResponseEntity<Map<Integer, Set<Team>>> getGroupedTeams(
       @PathVariable("doublesTournamentId") long doublesTournamentId) {
 
@@ -302,7 +301,9 @@ public class DataController {
 
     try {
 
-      playerService.unGroupPlayers(id);
+      if (tournamentService.getSinglesTournamentById(id).get().getGroups().size() > 0) {
+        playerService.unGroupPlayers(id);
+      }
 
       TournamentDTO deletedTournament =
           TournamentDTOMapper.toTournamentDTO(tournamentService.deleteSinglesTournamentById(id));
@@ -322,7 +323,9 @@ public class DataController {
 
     try {
 
-      teamService.unGroupTeams(id);
+      if (tournamentService.getDoublesTournamentById(id).get().getGroups().size() > 0) {
+        teamService.unGroupTeams(id);
+      }
 
       TournamentDTO deletedTournament =
           TournamentDTOMapper.toTournamentDTO(tournamentService.deleteDoublesTournamentById(id));
