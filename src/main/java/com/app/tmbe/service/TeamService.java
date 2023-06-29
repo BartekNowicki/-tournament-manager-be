@@ -9,12 +9,9 @@ import com.app.tmbe.dataModel.DoublesTournament;
 import com.app.tmbe.exception.NoEntityFoundCustomException;
 import com.app.tmbe.repository.DoublesTournamentRepository;
 import com.app.tmbe.repository.GroupInDoublesRepository;
-import com.app.tmbe.repository.GroupInSinglesRepository;
 import com.app.tmbe.repository.TeamRepository;
 import com.app.tmbe.utils.GrouperInterface;
-import com.app.tmbe.utils.PlayerGrouper;
 import com.app.tmbe.utils.TeamGrouper;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -116,8 +113,40 @@ public class TeamService {
                 t.joinGroup(newGroup);
                 saveOrUpdateTeam(t);
               }
+              tournament.addGroup(newGroup);
             });
+    doublesTournamentRepository.save(tournament);
     return groups;
+  }
+
+  public List<Team> unGroupTeams(long doublesTournamentId) throws Exception {
+    // using the repo instead of the service to avoid the prohibited circular dependency
+    // teamService <-> tournamentService
+
+    DoublesTournament tournament =
+            doublesTournamentRepository
+                    .findById(doublesTournamentId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid doubles tournamentId"));
+
+    if (tournament.getGroups().size() == 0) {
+      throw new Exception("This tournament has no groups assigned to it!");
+    }
+
+    Set<GroupInDoubles> groups = new HashSet<>(tournament.getGroups());
+
+    groups.forEach(
+            g -> {
+              for (Team t : new HashSet<>(g.getMembers())) {
+                t.leaveGroup(g);
+                saveOrUpdateTeam(t);
+              }
+              tournament.removeGroup(g);
+              groupInDoublesRepository.delete(g);
+            });
+
+    doublesTournamentRepository.save(tournament);
+
+    return teamRepository.findAll();
   }
 
   public Map<Long, Boolean> checkTeams(Map<Long, Boolean> idToCheckStatusMapping) throws Exception {

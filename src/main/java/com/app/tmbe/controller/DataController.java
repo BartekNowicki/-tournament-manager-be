@@ -302,6 +302,8 @@ public class DataController {
 
     try {
 
+      playerService.unGroupPlayers(id);
+
       TournamentDTO deletedTournament =
           TournamentDTOMapper.toTournamentDTO(tournamentService.deleteSinglesTournamentById(id));
 
@@ -319,6 +321,8 @@ public class DataController {
       @PathVariable("id") long id) {
 
     try {
+
+      teamService.unGroupTeams(id);
 
       TournamentDTO deletedTournament =
           TournamentDTOMapper.toTournamentDTO(tournamentService.deleteDoublesTournamentById(id));

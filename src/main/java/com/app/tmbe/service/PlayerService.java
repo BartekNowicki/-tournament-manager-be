@@ -28,7 +28,6 @@ public class PlayerService {
   @Autowired PlayerRepository playerRepository;
   @Autowired SinglesTournamentRepository singlesTournamentRepository;
   @Autowired GroupInSinglesRepository groupInSinglesRepository;
-  @Autowired GroupInDoublesRepository groupInDoublesRepository;
 
   public List<Player> getAllPlayers() {
     return playerRepository.findAll();
