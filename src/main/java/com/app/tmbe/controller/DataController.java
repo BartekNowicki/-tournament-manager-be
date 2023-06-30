@@ -158,6 +158,29 @@ public class DataController {
     }
   }
 
+  @GetMapping("/teams/ungroup/{doublesTournamentId}")
+  public ResponseEntity<List<TeamDTO>> unGroupTeams(
+          @PathVariable("doublesTournamentId") long doublesTournamentId) {
+
+    try {
+
+      List<TeamDTO> teams =
+              teamService.unGroupTeams(doublesTournamentId).stream()
+                      .map(TeamDTOMapper::toTeamDTO)
+                      .collect(Collectors.toList());
+
+      if (teams.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+
+      return new ResponseEntity<>(teams, HttpStatus.OK);
+
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+
   @GetMapping("/players/{id}")
   public ResponseEntity<PlayerDTO> getPlayer(@PathVariable("id") long id) {
 

@@ -75,7 +75,7 @@ public class DoublesTournament extends Tournament {
   }
 
   public void removeGroup(GroupInDoubles group) {
-    this.groups.remove(groups);
+    this.groups.remove(group);
     group.setPartOfDoublesTournament(null);
   }
 }

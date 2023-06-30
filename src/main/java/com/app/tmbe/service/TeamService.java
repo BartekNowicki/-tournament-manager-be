@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
@@ -96,7 +97,10 @@ public class TeamService {
     }
 
     int groupSize = tournament.getGroupSize();
-    Set<Team> teams = tournament.getParticipatingTeams();
+    Set<Team> teams =
+        tournament.getParticipatingTeams().stream()
+            .filter(t -> t.getId() != -1)
+            .collect(Collectors.toSet());
     GrouperInterface teamGrouper = new TeamGrouper(teams, groupSize);
     Map<Integer, Set<Team>> groups = teamGrouper.groupTeams();
 
@@ -124,9 +128,9 @@ public class TeamService {
     // teamService <-> tournamentService
 
     DoublesTournament tournament =
-            doublesTournamentRepository
-                    .findById(doublesTournamentId)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid doubles tournamentId"));
+        doublesTournamentRepository
+            .findById(doublesTournamentId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid doubles tournamentId"));
 
     if (tournament.getGroups().size() == 0) {
       throw new Exception("This tournament has no groups assigned to it!");
@@ -135,14 +139,14 @@ public class TeamService {
     Set<GroupInDoubles> groups = new HashSet<>(tournament.getGroups());
 
     groups.forEach(
-            g -> {
-              for (Team t : new HashSet<>(g.getMembers())) {
-                t.leaveGroup(g);
-                saveOrUpdateTeam(t);
-              }
-              tournament.removeGroup(g);
-              groupInDoublesRepository.delete(g);
-            });
+        g -> {
+          for (Team t : new HashSet<>(g.getMembers())) {
+            t.leaveGroup(g);
+            saveOrUpdateTeam(t);
+          }
+          tournament.removeGroup(g);
+          groupInDoublesRepository.delete(g);
+        });
 
     doublesTournamentRepository.save(tournament);
 
